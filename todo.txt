@@ -1,9 +1,0 @@
-- Trigger for Magic and Resonance users that sets the respective attribute to 1
-- Trigger for multiple qualities like with skills
-- Maximum for skills, Aptitude (+ double normal karma/BP cost) -- probably best with an INSTEAD OF INSERT trigger
-- Ratings for qualities
-- Tables for adept powers
-- Trigger for gear; make sure the item exists in the DB
-- Calculate correct price for gear that has rating points
-- Weapon upgrades that cost a percentage of the weapon cost? Should probably let the user handle that
-- 
