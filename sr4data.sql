@@ -1,9 +1,99 @@
-insert into Metatype
-    (MetatypeID, Name, MetavariantID, BaseStrength, BaseBody, BaseAgility, BaseIntuition, BaseLogic, BaseCharisma, BaseWillpower, BaseEdge, MaxStrength, MaxBody, MaxAgility, MaxIntuition, MaxLogic, MaxCharisma, MaxWillpower, MaxEdge, BPCost)
+insert into Metatypes
+    (Name, BaseBody, BaseAgility, BaseReaction, BaseStrength, BaseCharisma, BaseIntuition, BaseLogic, BaseWillpower, BaseEdge, MaxBody, MaxAgility, MaxReaction, MaxStrength, MaxCharisma, MaxIntuition, MaxLogic, MaxWillpower, MaxEdge, BPCost)
 values
-    (1, 'Homo sapiens sapiens', NULL, 1, 1, 1, 1, 1, 1, 1, 2, 6, 6, 6, 6, 6, 6, 6, 7, 0),
-    (2, 'Homo sapiens nobilis', NULL, 1, 1, 2, 1, 1, 3, 1, 1, 6, 6, 7, 6, 6, 8, 6, 6, 40)
-    ;
+    ('Human', 1, 1, 1, 1, 1, 1, 1, 1, 2, 6, 6, 6, 6, 6, 6, 6, 6, 7, 0),
+    ('Elf', 1, 2, 1, 1, 3, 1, 1, 1, 1, 6, 7, 6,6,8,6,6,6,6, 30),
+    ('Ork', 4,1,1,3,1,1,1,1,1,9,6,6,8,5,6,5,6,6,20),
+    ('Dwarf', 2,1, 1,3,1,1,1,2,1,7,6,5,8,6,6,6,7,6,25),
+    ('Troll', 5,1,1,5,1,1,1,1,1,10,5,6,10,4,5,5,6,6,40),
+    -- human metavariants
+    ('Nartaki', 1, 1, 1, 1, 1, 1, 1, 1, 2, 6, 6, 6, 6, 6, 6, 6, 6, 7, 25),
+    -- dwarf metavariants
+    ('Gnome', 2,1, 1,3,1,1,1,2,1,7,6,5,8,6,6,6,7,6,25),
+    ('Harumen', 2,1, 1,3,1,1,1,2,1,7,6,5,8,6,6,6,7,6,50),
+    ('Koborokuru', 2,1, 1,3,1,1,1,2,1,7,6,5,8,6,6,6,7,6,35),
+    ('Menehune', 2,1, 1,3,1,1,1,2,1,7,6,5,8,6,6,6,7,6,25),
+    -- elf metavariants
+    ('Dryad', 1, 2, 1, 1, 3, 1, 1, 1, 1, 6, 7, 6,6,8,6,6,6,6, 45),
+    ('Night One', 1, 2, 1, 1, 3, 1, 1, 1, 1, 6, 7, 6,6,8,6,6,6,6, 35),
+    ('Wakyambi', 1, 2, 1, 1, 3, 1, 1, 1, 1, 6, 7, 6,6,8,6,6,6,6, 35),
+    ('Xapiri Thëpë', 1, 2, 1, 1, 3, 1, 1, 1, 1, 6, 7, 6,6,8,6,6,6,6, 40),
+    -- ork metavariants
+    ('Hobgoblin', 4,1,1,3,1,1,1,1,1,9,6,6,8,5,6,5,6,6,20),
+    ('Ogre', 4,1,1,3,1,1,1,1,1,9,6,6,8,5,6,5,6,6,20),
+    ('Oni', 4,1,1,3,1,1,1,1,1,9,6,6,8,5,6,5,6,6,25),
+    ('Satyr', 4,1,1,3,1,1,1,1,1,9,6,6,8,5,6,5,6,6,25),
+    -- troll metavariants
+    ('Cyclops', 5,1,1,5,1,1,1,1,1,10,5,6,10,4,5,5,6,6,45),
+    ('Fomori', 5,1,1,5,1,1,1,1,1,10,5,6,10,4,5,5,6,6,45),
+    ('Giant', 5,1,1,5,1,1,1,1,1,10,5,6,10,4,5,5,6,6,40),
+    ('Minotaur', 5,1,1,5,1,1,1,1,1,10,5,6,10,4,5,5,6,6,45);
+    
+insert into MetatypeSpecials
+(Metatype, Special)
+values
+    ('Ork', 'Low-Light Vision'),
+    ('Dwarf', 'Thermographic Vision'),
+    ('Dwarf', 'Resistance to Pathogens/Toxins (2)'),
+    ('Elf', 'Low-Light Vision'),
+    ('Troll', 'Thermographic Vision'),
+    ('Troll', '+1 natural melee reach'),
+    ('Troll', '+1 natural armor'),
+    ('Nartaki', 'Shiva arms'),
+    ('Nartaki', 'Striking Skin Pigmentation'),
+    ('Gnome', 'Arcane Arrester'),
+    ('Gnome', 'Neoteny'),
+    ('Gnome', 'Thermographic Vision'),
+    ('Harumen', 'Low-Light Vision'),
+    ('Harumen', 'Metagenetic Improvement (Agility)'),
+    ('Harumen', 'Monkey Paws'),
+    ('Harumen', 'Prehensile Tail'),
+    ('Harumen', 'Unusual Hair (Body Hair)'),
+    ('Koborokuru', 'Celerity'),
+    ('Koborokuru', 'Resistance to Pathogens/Toxins (2)'),
+    ('Koborokuru', 'Thermographic Vision'),
+    ('Koborokuru', 'Unusual Hair'),
+    ('Menehune', 'Resistance to Pathogens/Toxins (2)'),
+    ('Menehune', 'Thermographic Vision'),
+    ('Menehune', 'Underwater Vision'),
+    ('Dryad', 'Glamour'),
+    ('Dryad', 'Low-Light Vision'),
+    ('Dryad', 'Symbiosis'),
+    ('Night One', 'Allergy (Sunlight, mild)'),
+    ('Night One', 'Low-Light Vision'),
+    ('Night One', 'Keen-eared'),
+    ('Night One', 'Nocturnal'),
+    ('Night One', 'Unusual Hair (Colored Fur)'),
+    ('Wakyambi', 'Celerity'),
+    ('Wakyambi', 'Elongated Limbs'),
+    ('Wakyambi', 'Low-Light Vision'),
+    ('Xapiri Thëpë', 'Allergy (choose pollutant, Mild)'),
+    ('Xapiri Thëpë', 'Allergy (choose second pollutant, Mild)'),
+    ('Xapiri Thëpë', 'Low-Light Vision'),
+    ('Xapiri Thëpë', 'Photometabolism'),
+    ('Hobgoblin', 'Fangs'),
+    ('Hobgoblin', 'Low-Light Vision'),
+    ('Hobgoblin', 'Poor Self-Control: Vindictive'),
+    ('Ogre', 'Low-Light Vision'),
+    ('Ogre', 'Ogre Stomach'),
+    ('Oni', 'Low-Light Vision'),
+    ('Oni', 'Striking Skin Pigmentation'),
+    ('Satyr', 'Low-Light Vision'),
+    ('Satyr', 'Satyr Legs'),
+    ('Cyclops', 'Cyclopean Eye'),
+    ('Cyclops', 'Metagenetic Improvement (Strength)'),
+    ('Cyclops', '+1 Reach'),
+    ('Fomori', 'Arcane Arrester'),
+    ('Fomori', 'Metagenetic Improvement (Body)'),
+    ('Fomori', 'Thermographic Vision'),
+    ('Fomori', '+1 Reach'),
+    ('Giant', 'Dermal Alteration (Bark)'),
+    ('Giant', 'Thermographic Vision'),
+    ('Giant', '+1 Reach'),
+    ('Minotaur', 'Goring Horns'),
+    ('Minotaur', 'Metagenetic Improvement (Body)'),
+    ('Minotaur', 'Thermographic Vision'),
+    ('Minotaur', '+1 Reach');
 
     
         
@@ -26,91 +116,91 @@ values
     ;
     
 insert into Skills
-    (Name, SkillGroup, IsActive, CanDefault, SkillAttribute, Description, Multiple)
+    (Name, SkillGroup, IsActive, CanDefault, SkillAttribute, Description)
     values
     --  Combat 
-    ('Archery', null, 1, 1, 'Agility', 'Use of muscle-powered projectile weapons', null),
-    ('Automatics', 7, 1, 1, 'Agility', 'Use of personal firearms capable of autofire, larger than a pistol, but typically with a shorter barrel than a longarm', null),
-    ('Blades', 3, 1, 1, 'Agility', 'Use of hand-held melee weapons with a sharpened edge or point', null),
-    ('Clubs', 3, 1, 1, 'Agility', 'Use of hand-held melee weapons that have no edge or blade', null),
-    ('Dodge', null, 1, 1, 'Reaction', 'Ability to move out of the way of a perceived attack or other incoming threat', null),
-    ('Exotic Melee Weapon', null, 1, 1, 'Agility', 'Must be taken separately for each different weapon you wish to be able to use', 1), -- Front end should take care of that
-    ('Exotic Ranged Weapon', null, 1, 1, 'Agility', 'Must be taken separately for each different weapon you wish to be able to use', 1),
-    ('Heavy Weapons', null, 1, 1, 'Agility', 'Use of ranged projectile and launch weapons larger than an assault rifle', null),
-    ('Longarms', 7, 1, 1, 'Agility', 'Use of all personal firearms with extended barrels', null),
-    ('Pistols', 7, 1, 1, 'Agility', 'Use of all types of hand-held firearms', null),
-    ('Throwing Weapons', null, 1, 1, 'Agility', 'Use of any item thrown by the user', null),
-    ('Unarmed Combat', null, 1, 1, 'Agility', 'Use of combat techniques based solely on the use of own body parts', null),
+    ('Archery', null, 1, 1, 'Agility', 'Use of muscle-powered projectile weapons'),
+    ('Automatics', 7, 1, 1, 'Agility', 'Use of personal firearms capable of autofire, larger than a pistol, but typically with a shorter barrel than a longarm'),
+    ('Blades', 3, 1, 1, 'Agility', 'Use of hand-held melee weapons with a sharpened edge or point'),
+    ('Clubs', 3, 1, 1, 'Agility', 'Use of hand-held melee weapons that have no edge or blade'),
+    ('Dodge', null, 1, 1, 'Reaction', 'Ability to move out of the way of a perceived attack or other incoming threat'),
+    ('Exotic Melee Weapon', null, 1, 1, 'Agility', 'Must be taken separately for each different weapon you wish to be able to use'), -- Front end should take care of that; actually, create a new skill for each
+    ('Exotic Ranged Weapon', null, 1, 1, 'Agility', 'Must be taken separately for each different weapon you wish to be able to use'),
+    ('Heavy Weapons', null, 1, 1, 'Agility', 'Use of ranged projectile and launch weapons larger than an assault rifle'),
+    ('Longarms', 7, 1, 1, 'Agility', 'Use of all personal firearms with extended barrels'),
+    ('Pistols', 7, 1, 1, 'Agility', 'Use of all types of hand-held firearms'),
+    ('Throwing Weapons', null, 1, 1, 'Agility', 'Use of any item thrown by the user'),
+    ('Unarmed Combat', null, 1, 1, 'Agility', 'Use of combat techniques based solely on the use of own body parts'),
     --  Magical Active
-    ('Arcana', null, 1, 0, 'Logic', 'Practical application of magical theory', null),
-    ('Assensing', null, 1, 0, 'Intuition', 'Learning information from auras, astral forms and astral signatures', null), -- constraint: capable of astral perception?
-    ('Astral Combat', null, 1, 0, 'Willpower', 'Fight while in astral space', null), -- capable of astral perception
-    ('Banishing', 'Conjuring', 1, 0, 'Magic', 'Disrupt spirits, removing them from the physical and astral planes', null),
-    ('Binding', 'Conjuring', 1, 0, 'Magic', 'Ask/demand long-term services from a spirit the magician has already summoned', null),
-    ('Counterspelling', 'Sorcery', 1, 0, 'Magic', 'Remove existing sustained spells, or defend against spells cast at them or others', null),
-    ('Enchanting', null, 1, 0, 'Magic', 'Techniques to create magical foci, spirit vessels, and to evaluate magical goods', null), -- constraint: Adept/Magician/Mystic Adept, Magic attribute >= 1,
-    ('Ritual Spellcasting', 'Sorcery', 1, 0, 'Magic', 'Cast spells in a ritual fashion', null),
-    ('Spellcasting', 'Sorcery', 1, 0, 'Magic', 'Cast spells', null),
-    ('Summoning', 'Conjuring', 1, 0, 'Magic', 'Summon spirits and determine how many services they owe', null),
+    ('Arcana', null, 1, 0, 'Logic', 'Practical application of magical theory'),
+    ('Assensing', null, 1, 0, 'Intuition', 'Learning information from auras, astral forms and astral signatures'), -- constraint: capable of astral perception?
+    ('Astral Combat', null, 1, 0, 'Willpower', 'Fight while in astral space'), -- capable of astral perception
+    ('Banishing', 'Conjuring', 1, 0, 'Magic', 'Disrupt spirits, removing them from the physical and astral planes'),
+    ('Binding', 'Conjuring', 1, 0, 'Magic', 'Ask/demand long-term services from a spirit the magician has already summoned'),
+    ('Counterspelling', 'Sorcery', 1, 0, 'Magic', 'Remove existing sustained spells, or defend against spells cast at them or others'),
+    ('Enchanting', null, 1, 0, 'Magic', 'Techniques to create magical foci, spirit vessels, and to evaluate magical goods'), -- constraint: Adept/Magician/Mystic Adept, Magic attribute >= 1,
+    ('Ritual Spellcasting', 'Sorcery', 1, 0, 'Magic', 'Cast spells in a ritual fashion'),
+    ('Spellcasting', 'Sorcery', 1, 0, 'Magic', 'Cast spells'),
+    ('Summoning', 'Conjuring', 1, 0, 'Magic', 'Summon spirits and determine how many services they owe'),
     -- Physical Active,
-    ('Climbing', 'Athletics', 1, 1, 'Strength', 'Ascend vertical obstacles or walls', null),
-    ('Disguise', 'Stealth', 1, 1, 'Intuition', 'Take on a false appearance', null),
-    ('Diving', null, 1, 1, 'Body', 'All forms of underwater diving', null),
-    ('Escape Artist', null, 1, 1, 'Agility', 'Slip out of bonds or shackles without using brute force', null),
-    ('Gymnastics', 'Athletics', 1, 1, 'Agility', 'Acrobatics feats, balance, jumping, vaulting and tumbling', null),
-    ('Infiltration', 'Stealth', 1, 1, 'Agility', 'Sneak around undetected by either other characters or security sensors', null),
-    ('Navigation', 'Outdoors', 1, 1, 'Intuition', 'Determine directions, read maps, plot a course, stick to it without getting lost', null),
-    ('Palming', 'Stealth', 1, 1, 'Agility', 'Conceal small objects or remove them from others without being noticed', null),
-    ('Parachuting', null, 1, 1, 'Body', 'Exit a high area with a parachute and stop your quick descent', null),
-    ('Perception', null, 1, 1, 'Intuition', 'Determine what you notice about your surroundings that is abnormal or strange', null),
-    ('Running', 'Athletics', 1, 1, 'Strength', 'Increase the distance you can run, determine how well you can pace yourself', null),
-    ('Shadowing', 'Stealth', 1, 1, 'Intuition', 'Follow someone else discreetly without being noticed; ensure you are not followed the same way', null),
-    ('Survival', 'Outdoors', 1, 1, 'Willpower', 'Proficiency in surviving outdoors for an extended period of time', null),
-    ('Swimming', 'Athletics', 1, 1, 'Strength', 'Increase the distance you can swim; determines how much experience you have had with water', null),
-    ('Tracking', 'Outdoors', 1, 1, 'Intuition', 'Track metahumans or critters in the wild', null),
+    ('Climbing', 'Athletics', 1, 1, 'Strength', 'Ascend vertical obstacles or walls'),
+    ('Disguise', 'Stealth', 1, 1, 'Intuition', 'Take on a false appearance'),
+    ('Diving', null, 1, 1, 'Body', 'All forms of underwater diving'),
+    ('Escape Artist', null, 1, 1, 'Agility', 'Slip out of bonds or shackles without using brute force'),
+    ('Gymnastics', 'Athletics', 1, 1, 'Agility', 'Acrobatics feats, balance, jumping, vaulting and tumbling'),
+    ('Infiltration', 'Stealth', 1, 1, 'Agility', 'Sneak around undetected by either other characters or security sensors'),
+    ('Navigation', 'Outdoors', 1, 1, 'Intuition', 'Determine directions, read maps, plot a course, stick to it without getting lost'),
+    ('Palming', 'Stealth', 1, 1, 'Agility', 'Conceal small objects or remove them from others without being noticed'),
+    ('Parachuting', null, 1, 1, 'Body', 'Exit a high area with a parachute and stop your quick descent'),
+    ('Perception', null, 1, 1, 'Intuition', 'Determine what you notice about your surroundings that is abnormal or strange'),
+    ('Running', 'Athletics', 1, 1, 'Strength', 'Increase the distance you can run, determine how well you can pace yourself'),
+    ('Shadowing', 'Stealth', 1, 1, 'Intuition', 'Follow someone else discreetly without being noticed; ensure you are not followed the same way'),
+    ('Survival', 'Outdoors', 1, 1, 'Willpower', 'Proficiency in surviving outdoors for an extended period of time'),
+    ('Swimming', 'Athletics', 1, 1, 'Strength', 'Increase the distance you can swim; determines how much experience you have had with water'),
+    ('Tracking', 'Outdoors', 1, 1, 'Intuition', 'Track metahumans or critters in the wild'),
     -- Resonance Active
-    ('Compiling', 'Tasking', 1, 0, 'Resonance', 'Compile sprites and determine how many tasks they owe', null),
-    ('Decompiling', 'Tasking', 1, 0, 'Resonance', 'Decompile sprites', null),
-    ('Registering', 'Tasking', 1, 0, 'Resonance', 'Register sprites for long-term service', null),
+    ('Compiling', 'Tasking', 1, 0, 'Resonance', 'Compile sprites and determine how many tasks they owe'),
+    ('Decompiling', 'Tasking', 1, 0, 'Resonance', 'Decompile sprites'),
+    ('Registering', 'Tasking', 1, 0, 'Resonance', 'Register sprites for long-term service'),
     -- Social Active
-    ('Con', 'Influence', 1, 1, 'Charisma', 'Misrepresent the truth in some way, and get the others to believe you', null),
-    ('Etiquette', 'Influence', 1, 1, 'Charisma', 'Function within a specific subculture without appearing out of place', null),
-    ('Instruction', null, 1, 1, 'Charisma', 'Teach something efficiently to another character', null),
-    ('Intimidation', null, 1, 1, 'Charisma', 'Make people do what they normally might not, out of fear inspired by your appearance or behaviour', null),
-    ('Leadership', 'Influence', 1, 1, 'Charisma', 'Get others to do your bidding through example and authority', null),
-    ('Negotiation', 'Influence', 1, 1, 'Charisma', 'Bargaining tactics used when you deal with another character and seek to come out ahead', null),
+    ('Con', 'Influence', 1, 1, 'Charisma', 'Misrepresent the truth in some way, and get the others to believe you'),
+    ('Etiquette', 'Influence', 1, 1, 'Charisma', 'Function within a specific subculture without appearing out of place'),
+    ('Instruction', null, 1, 1, 'Charisma', 'Teach something efficiently to another character'),
+    ('Intimidation', null, 1, 1, 'Charisma', 'Make people do what they normally might not, out of fear inspired by your appearance or behaviour'),
+    ('Leadership', 'Influence', 1, 1, 'Charisma', 'Get others to do your bidding through example and authority'),
+    ('Negotiation', 'Influence', 1, 1, 'Charisma', 'Bargaining tactics used when you deal with another character and seek to come out ahead'),
     -- Technical Active
-    ('Aeronautics Mechanic', 'Mechanic', 1, 0, 'Logic', 'Repair and maintain aircraft', null),
-    ('Artisan', null, 1, 1, 'Intuition', 'Creative skills', null),
-    ('Automotive Mechanic', 'Mechanic', 1, 0, 'Logic', 'Repair and maintain ground craft', null),
-    ('Chemistry', null, 1, 0, 'Logic', 'Use and understanding of chemistry; proper laboratory procedure, ability to read chemical formulae', null),
-    ('Computer', 'Electronics', 1, 1, 'Logic', 'Use and understanding of computers and electronic devices', null),
-    ('Cybercombat', 'Cracking', 1, 1, 'Logic', 'Attack other icons in the Matrix, utilise attack programmes and system tricks', null),
-    ('Cybertechnology', 'Biotech', 1, 0, 'Logic', 'Create and care for cybernetics and bioware', null),
-    ('Data Search', 'Electronics', 1, 1, 'Logic', 'Use search engines, databases and other tools to track down information', null),
-    ('Demolitions', null, 1, 1, 'Logic', 'Preparation, measuring and setting of chemical explosives', null),
-    ('Electronic Warfare', 'Cracking', 1, 0, 'Logic', 'Disrupt communications in a variety of ways; encode and decode communications', null),
-    ('First Aid', 'Biotech', 1, 1, 'Logic', 'Basic medicine in a hands-on sense', null),
-    ('Forgery', null, 1, 1, 'Agility', 'Make a copy of a document or other item', null),
-    ('Hacking', 'Cracking', 1, 1, 'Logic', 'Exploit and subvert the programming of computers and electronics', null), 
-    ('Hardware', 'Electronics', 1, 0, 'Logic', 'Creation, repair and technical manipulation of computers and electronic devices', null),
-    ('Industrial Mechanic', 'Mechanic', 1, 0, 'Logic', 'Maintain and repair mechanical devices used in various industries', null), 
-    ('Locksmith', null, 1, 1, 'Agility', 'Manipulate, open and repair mechanical locks', null), 
-    ('Medicine', 'Biotech', 1, 0, 'Logic', 'Proper treatment of disease and illness as well as wounds, beyond what First Aid can do', null), 
-    ('Nautical Mechanic', 'Mechanic', 1, 0, 'Logic', 'Repair and maintain watercraft', null), 
-    ('Software', 'Electronics', 1, 0, 'Logic', 'Write utilities for use in the Matrix', null), 
+    ('Aeronautics Mechanic', 'Mechanic', 1, 0, 'Logic', 'Repair and maintain aircraft'),
+    ('Artisan', null, 1, 1, 'Intuition', 'Creative skills'),
+    ('Automotive Mechanic', 'Mechanic', 1, 0, 'Logic', 'Repair and maintain ground craft'),
+    ('Chemistry', null, 1, 0, 'Logic', 'Use and understanding of chemistry; proper laboratory procedure, ability to read chemical formulae'),
+    ('Computer', 'Electronics', 1, 1, 'Logic', 'Use and understanding of computers and electronic devices'),
+    ('Cybercombat', 'Cracking', 1, 1, 'Logic', 'Attack other icons in the Matrix, utilise attack programmes and system tricks'),
+    ('Cybertechnology', 'Biotech', 1, 0, 'Logic', 'Create and care for cybernetics and bioware'),
+    ('Data Search', 'Electronics', 1, 1, 'Logic', 'Use search engines, databases and other tools to track down information'),
+    ('Demolitions', null, 1, 1, 'Logic', 'Preparation, measuring and setting of chemical explosives'),
+    ('Electronic Warfare', 'Cracking', 1, 0, 'Logic', 'Disrupt communications in a variety of ways; encode and decode communications'),
+    ('First Aid', 'Biotech', 1, 1, 'Logic', 'Basic medicine in a hands-on sense'),
+    ('Forgery', null, 1, 1, 'Agility', 'Make a copy of a document or other item'),
+    ('Hacking', 'Cracking', 1, 1, 'Logic', 'Exploit and subvert the programming of computers and electronics'), 
+    ('Hardware', 'Electronics', 1, 0, 'Logic', 'Creation, repair and technical manipulation of computers and electronic devices'),
+    ('Industrial Mechanic', 'Mechanic', 1, 0, 'Logic', 'Maintain and repair mechanical devices used in various industries'), 
+    ('Locksmith', null, 1, 1, 'Agility', 'Manipulate, open and repair mechanical locks'), 
+    ('Medicine', 'Biotech', 1, 0, 'Logic', 'Proper treatment of disease and illness as well as wounds, beyond what First Aid can do'), 
+    ('Nautical Mechanic', 'Mechanic', 1, 0, 'Logic', 'Repair and maintain watercraft'), 
+    ('Software', 'Electronics', 1, 0, 'Logic', 'Write utilities for use in the Matrix'), 
     -- Vehicle Active
-    ('Gunnery', null, 1, 1, 'Agility', 'Use vehicle-mounted weapons', null), 
-    ('Pilot Aerospace', null, 1, 0, 'Reaction', 'Control parabolic aircraft, suborbital aircraft, and anything piloted outside the atmosphere', null), 
-    ('Pilot Aircraft', null, 1, 0, 'Reaction', 'Use aircraft piloted within the atmosphere', null), 
-    ('Pilot Anthroform', null, 1, 0, 'Reaction', 'Operate vehicle that walks on legs', null), 
-    ('Pilot Exotic Vehicle', null, 1, 0, 'Reaction', 'Must be taken separately for each exotic vehicle you wish to pilot', 1),
-    ('Pilot Ground Craft', null, 1, 0, 'Reaction', 'Control ground vehicles without legs', null),
-    ('Pilot Watercraft', null, 1, 0, 'Reaction', 'Control water vehicles', null),
+    ('Gunnery', null, 1, 1, 'Agility', 'Use vehicle-mounted weapons'), 
+    ('Pilot Aerospace', null, 1, 0, 'Reaction', 'Control parabolic aircraft, suborbital aircraft, and anything piloted outside the atmosphere'), 
+    ('Pilot Aircraft', null, 1, 0, 'Reaction', 'Use aircraft piloted within the atmosphere'), 
+    ('Pilot Anthroform', null, 1, 0, 'Reaction', 'Operate vehicle that walks on legs'), 
+    ('Pilot Exotic Vehicle', null, 1, 0, 'Reaction', 'Must be taken separately for each exotic vehicle you wish to pilot'),
+    ('Pilot Ground Craft', null, 1, 0, 'Reaction', 'Control ground vehicles without legs'),
+    ('Pilot Watercraft', null, 1, 0, 'Reaction', 'Control water vehicles'),
     -- Language
-    ('Language', null, 0, 0, 'Intuition', 'Must be taken separately for each language desired', 1), 
+    ('Language', null, 0, 0, 'Intuition', 'Must be taken separately for each language desired'), 
     -- Knowledge
-    ('Knowledge', null, 0, 0, 'Logic', 'Must be taken separately for each knowledge skill desired', 1)
+    ('Knowledge', null, 0, 0, 'Logic', 'Must be taken separately for each knowledge skill desired')
     ;
     
 
@@ -120,7 +210,7 @@ VALUES
  -- Core Book
  -- Positive
   ('Adept', 5, 'Character is an adept, starts with Magic attribute of 1'),
-  ('Ambidextrous', 5, 'Character can handle objects equally well with both hands')
+  ('Ambidextrous', 5, 'Character can handle objects equally well with both hands'),
   ('Animal Empathy', 10, '+2 modifier for all tests involving influence or control of an animal'),
   ('Aptitude', 10, 'May improve one Active skill one point above its natural maximum to a 7'),
   ('Astral Chameleon', 5, 'Astral signatures last half as long, -2 to others assensing the signature'), -- only for Magic users
@@ -145,29 +235,29 @@ VALUES
   ('Natural Hardening', 10, '1 point of natural biofeedback filtering'),
   ('Natural Immunity (5 BP)', 5, 'Character is immune to a single natural disease or toxin'),
   ('Natural Immunity (10 BP)', 10, 'Character is immune to a single synthetic disease or toxin'), 
-  ('Photographic Memory'), 10, '-1 threshold modifier to Memory Tests'), 
-  ('Quick Healer', 10, '+2 dice pool modifier to Healing tests made on/for/by him'),
+  ('Photographic Memory', 10, '-1 threshold modifier to Memory Tests'), 
+  ('Quick Healer', 10, '+2 dice pool modifier to Healing tests made on/for/by them'),
   ('Resistance to Pathogens/Toxins (5 BP)', 5, 'Character is either resistant to pathogens or toxins (+1 to Resistance Tests)'),
   ('Resistance to Pathogens/Toxins (10 BP)', 10, 'Character is resistant to both pathogens and toxins (+1 to Resistance Tests)'),
   ('Spirit Affinity', 10, 'Character is naturally attuned to one type of spirit'), 
   ('Technomancer', 5, 'Character is a technomancer and starts with a Resonance attribute of 1'), 
   ('Toughness', 10, '+1 dice pool modifier to Body when making Damage Resistance Tests'),
   ('Will to Live', 5, '1 additional Damage Overflow Box per rating point'), -- max rating 3
- -- Negative
+   --      Negative
   ('Addiction (Mild)', -5, 'Addict experiences cravings once a week, -2 dice pool modifier to tests to resist the craving'),
   ('Addiction (Moderate)', -10, 'Cravings at least once a day, -4 to tests to resist the craving'), 
   ('Addiction (Severe)', -20, 'Cravings at least twice a day, -6 to tests to resist the craving'), 
   ('Addiction (Burnout)', -30, 'Same as Addiction (Severe), but reduce Essence by 1'),
   ('Allergy (Uncommon, Mild)', -5, 'Substance is rare for the local environment; symptoms are distracting (-2 to all tests)'),
   ('Allergy (Uncommon, Moderate)', -10, 'Substance is rare for the local environment; contact with allergen produces intense pain (-4 to all tests; +2 to DV of weapons made from allergen when used against the character)'),
-  ('Allergy (Uncommon, Severe'), -15, 'Substance is rare for the local environment; character receives 1 box of damage for every minute exposed to the allergen; -4 to all tests, +4 to DV of weapons made from allergen when used against the character'),
+  ('Allergy (Uncommon, Severe)', -15, 'Substance is rare for the local environment; character receives 1 box of damage for every minute exposed to the allergen; -4 to all tests, +4 to DV of weapons made from allergen when used against the character'),
   ('Allergy (Common, Mild)', -10, 'Substance is common in the local environment; symptoms are distracting (-2 to all tests)'),
   ('Allergy (Common, Moderate)', -15,  'Substance is common in the local environment; contact with allergen produces intense pain (-4 to all tests; +2 to DV of weapons made from allergen when used against the character)'),
   ('Allergy (Common, Severe)', -20, 'Substance is common in the local environment; character receives 1 box of damage for every minute exposed to the allergen; -4 to all tests, +4 to DV of weapons made from allergen when used against the character'),
   ('Astral Beacon', -5, 'Astral signatures last twice as long, +2 to others assensing the signature'), -- Magic users only
   ('Bad Luck', -20, 'Whenever character uses Edge, roll 1D6; on a result of 1, it has the exact opposite effect intended'),
   ('Codeblock', -5, '-2 modifier to a particular Matrix action'), 
-  ('Combat Paralysis', -20, 'Character only rolls half her Initiative attribute on her first Initiative Test in combat; -3 on Surprise Tests; +1 threshold modifier to all Composure Tests in combat'),
+  ('Combat Paralysis', -20, 'Character only rolls half their Initiative attribute on their first Initiative Test in combat; -3 on Surprise Tests; +1 threshold modifier to all Composure Tests in combat'),
   ('Elf Poser', -5, 'Human character pretends to be an elf'), -- only for humans
   ('Gremlins', -5, 'reduce the number of rolled 1s necessary to get a glitch while using a moderately sophisticated device by 1 per rating point'), -- max rating 4
   ('Incompetent', -5, 'Character possesses a total lack of knowledge or ability with a certain Active skill'), 
@@ -188,8 +278,20 @@ VALUES
   ('Spirit Bane', -10, 'Character is actively disliked by one type of spirit'), 
   ('Uncouth', -20, 'Character has a difficult time interacting with others'), 
   ('Uneducated', -20, 'Character is ignorant of modern society'), 
-  ('Weak Immune System', -5, '-2 dice pool modifier to any tests for resisting diseases')
-  ;
+  ('Weak Immune System', -5, '-2 dice pool modifier to any tests for resisting diseases'),
+  -- Runner's Companion
+  -- Positive
+  ('Adrenaline Surge', 15, 'Act first in the first Initiative Pass of a new combat'),
+  ('Analytical Mind', 5, '+2 dice to any Logic Tests involving pattern recognition, evidence analysis, clue hunting or puzzle solving; +2 to any Data Search and Software Tests'),
+  ('Bilingual', 5, 'May list a second language as a Native tongue'),
+  ('Black Market Pipeline', 10, 'Choose one contact and one type of merchandise; this contact can always buy or sell that contraband on the black market at a price that benefits the character'),
+  ('Born Rich', 10, 'Character comes from an affluent background and can spend 60 BP on gear at character generation'),
+  ('Catlike', 10, 'Uncanny elegance; +1 to Infiltration and Shadowing; character must buy at least rating 2 in these skills to benefit from this quality'),
+  ('College Education', 5, 'Modifies the skill rating of any Academic Knowledge skill the character acquires by +1 (to maximum of rating 6)'),
+  ('Common Sense', 5, 'Character is down-to-earth, practical and sensible. Any time the character is about to do something foolish, the gamemaster must warn the player'),
+  ('Deep Cover (5 BP)', 5, 'Character''s actual identity is buried by manipulation and training, a trigger lets their real personality come forward until a second trigger brings it back to sleep.'),
+  ('Deep Cover (10 BP)', 10, 'As in the 5 BP quality but the character knows what both triggers are and can set things up to bring herself in and out of deep cover on their schedule')  
+;
     
 -- CREATE TABLE Spells
 -- (
@@ -206,17 +308,17 @@ VALUES
 -- );
 
 INSERT INTO Spells
- (Name, Category, SpellDescriptors, SpellType, SpellRange, DamageType, Threshold, Duration, DrainValue, Description)
+ (Name, SpellCategory, SpellDescriptors, SpellType, SpellRange, DamageType, Threshold, Duration, DrainValue, Description)
 VALUES
   -- Core book
  -- Combat Spells
  ('Acid Stream', 'Combat', 'Indirect, Elemental', 'P', 'LOS', 'P', 0, 'I', '(F/2) + 3', 'Creates a powerful corrosive that sprays the target (Acid damage)'),
  ('Toxic Wave', 'Combat', 'Indirect, Elemental, Area', 'P', 'LOS (A)', 'P', 0, 'I', '(F/2) + 5', 'Creates a powerful corrosive that sprays an area (Acid damage). Area spell'),   
  ('Punch', 'Combat', 'Indirect, Touch', 'P', 'T',  'S',  0, 'I', '(F/2) - 2','Smacks the target with psychokinetic force, inflicting Stun damage, requiring the caster to touch the target'), 
- ('Clout', 'Combat', 'Indirect', 'P', 'LOS',  'S',  0, 'I', '(F/2)', 'S', 'Smacks the target with psychokinetic force, inflicting Stun damage'),    
+ ('Clout', 'Combat', 'Indirect', 'P', 'LOS',  'S',  0, 'I', '(F/2)', 'Smacks the target with psychokinetic force, inflicting Stun damage'),    
  ('Blast', 'Combat', 'Indirect, Area', 'P', 'LOS (A)', 'S',  0, 'I', '(F/2) + 2', 'Smacks the targets with psychokinetic force, inflicting Stun damage. Area spell'), 
  ('Death Touch', 'Combat', 'Direct, Touch', 'M', 'T', 'P', 0, 'I', 'F/2 - 2', 'Channels destructive magical power into the target, inflicting Physical damage, requiring the caster to touch the target'),
- ('Manabolt', 'Combat', 'Direct', 'M', 'LOS', 'P', 0, 'I', 'F/2'), 'Channels destructive magical power into the target, inflicting Physical damage'),
+ ('Manabolt', 'Combat', 'Direct', 'M', 'LOS', 'P', 0, 'I', 'F/2', 'Channels destructive magical power into the target, inflicting Physical damage'),
  ('Manaball', 'Combat', 'Direct, Area', 'M', 'LOS (A)', 'P', 0, 'I', 'F/2 + 2', 'Channels destructive magical power into the targets, inflicting Physical damage. Area spell'),
  ('Flamethrower', 'Combat', 'Indirect, Elemental', 'P', 'LOS', 'P', 0, 'I', 'F/2 + 3', 'Creates an explosion of flames that scorches the target (Fire damage)'), 
  ('Fireball', 'Combat', 'Indirect, Elemental, Area', 'P', 'LOS (A)', 'P', 0, 'I', 'F/2 + 5', 'Creates an explosion of flames that scorches the targets (Fire damage). Area spell'), 
@@ -227,7 +329,8 @@ VALUES
  ('Powerball', 'Combat', 'Direct, Area', 'P', 'LOS (A)', 'P', 0, 'I', 'F/2 + 3', 'Channels destructive energy into the target, inflicting Physical damage. Affects living and non-living objects. Area spell'),
  ('Knockout', 'Combat', 'Direct, Touch', 'M', 'T', 'S', 0, 'I', 'F/2 - 3', 'Channels energy directly into the target, causing Stun damage. Touch spell'),
  ('Stunbolt', 'Combat', 'Direct', 'M', 'LOS', 'S', 0, 'I', 'F/2 - 1', 'Channels energy directly into the target, causing Stun damage'), 
- ('Stunball', 'Combat', 'Direct, Area', 'M', 'LOS (A)', 'S', 0, 'I', 'F/2 + 1', 'Channels energy directly into the target, causing Stun damage. Area spell'), 
+ ('Stunball', 'Combat', 'Direct, Area', 'M', 'LOS (A)', 'S', 0, 'I', 'F/2 + 1', 'Channels energy directly into the target, causing Stun damage. Area spell')
+ , 
  -- Detection Spells
  ('Analyze Device', 'Detection', 'Active, Directional', 'P', 'T', null, 0, 'S', 'F/2', 'Analyzes the purpose and operation of a device or piece of equipment'),
  ('Analyze Truth', 'Detection', 'Active, Directional', 'M', 'T', null, 1, 'S', 'F/2', 'Caster can tell whether a target''s statements are the truth'),
@@ -237,7 +340,7 @@ VALUES
  ('Detect Enemies',  'Detection', 'Active, Area', 'M', 'T', null, 0, 'S', 'F/2 + 1', 'Detects living targets within range who have hostile intentions against the character'),
  ('Detect Enemies, Extended',  'Detection', 'Active, Extended Area', 'M', 'T', null, 0, 'S', 'F/2 + 3', 'Detects living targets within range who have hostile intentions against the character'),
  ('Detect Individual',  'Detection', 'Active, Area', 'M', 'T', null, 0, 'S', 'F/2 - 1', 'Detects the presence of a particular individual within range'), 
- ('Detect Life', 'Detection', 'Active, Area', 'M', 'T', null, 0, 'S', 'F/2'. 'Detects living beings within range of the sense'),
+ ('Detect Life', 'Detection', 'Active, Area', 'M', 'T', null, 0, 'S', 'F/2', 'Detects living beings within range of the sense'),
  ('Detect Life, Extended', 'Detection', 'Active, Extended Area','M', 'T', null, 0, 'S', 'F/2 + 2', 'Detects living beings within the range of the sense'), 
  ('Detect [Life Form]', 'Detection', 'Active, Area', 'M', 'T', null, 0, 'S', 'F/2 - 1', 'Detects all of a specified type of life form within the range of the sense'), 
  ('Detect [Life Form], Extended', 'Detection', 'Active, Area', 'M', 'T', null, 0, 'S', 'F/2 + 1', 'Detects all of a specified type of life form within the range of the sense'), 
@@ -294,224 +397,225 @@ VALUES
  ('Poltergeist', 'Manipulation', 'Environmental, Area', 'P', 'LOS (A)', null, 1, 'S', 'F/2 + 3', 'Picks up small object and whirls them around in random patterns'), 
  ('Shadow', 'Manipulation', 'Environmental, Area', 'P', 'LOS (A)', null, 1, 'S', 'F/2 + 1', 'Creates a globe of darkness'), 
  ('Shapechange', 'Manipulation', 'Physical', 'P', 'LOS', null, 1, 'S', 'F/2 + 2', 'Transforms a voluntary subject into a normal critter'),
- ('[Critter] Form', 'Manipulation', 'Physical', 'P', 'LOS', null, 1, 'S', 'F/2 + 1', 'Transforms a voluntary subject into one specific non-paranormal critter')
- ('Turn to Goo', 'Manipulation', 'Physical', 'P', 'LOS', null, 1, 'S', 'F/2 + 2', 'Transforms living tissue into a sticky, glue-like substance');
+ ('[Critter] Form', 'Manipulation', 'Physical', 'P', 'LOS', null, 1, 'S', 'F/2 + 1', 'Transforms a voluntary subject into one specific non-paranormal critter'),
+ ('Turn to Goo', 'Manipulation', 'Physical', 'P', 'LOS', null, 1, 'S', 'F/2 + 2', 'Transforms living tissue into a sticky, glue-like substance')
+ ;
  
 
 
 INSERT INTO Gear
-(GearType, GearName, Availability, Restriction, NuyenCost, HasRating)
+(GearType, GearName, Availability, Restriction, NuyenCost, MinRating, MaxRating)
 VALUES
 -- Core Book 
 -- Melee Weapons
 
 -- Blades
-('MeleeWeapon', 'Combat Axe', 8, 'R', 600),
-('MeleeWeapon', 'Forearm Snap-Blades', 6, 'R', 150),
-('MeleeWeapon', 'Katana', 4, 'R', 1000),
-('MeleeWeapon', 'Knife', null, null, 20),
-('MeleeWeapon', 'Monofilament Sword', 8, 'R', 750),
-('MeleeWeapon', 'Survival Knife', null, null, 50),
-('MeleeWeapon', 'Sword', 4, 'R', 350)
+('MeleeWeapon', 'Combat Axe', 8, 'R', 600, null, null),
+('MeleeWeapon', 'Forearm Snap-Blades', 6, 'R', 150, null, null),
+('MeleeWeapon', 'Katana', 4, 'R', 1000, null, null),
+('MeleeWeapon', 'Knife', null, null, 20, null, null),
+('MeleeWeapon', 'Monofilament Sword', 8, 'R', 750, null, null),
+('MeleeWeapon', 'Survival Knife', null, null, 50, null, null),
+('MeleeWeapon', 'Sword', 4, 'R', 350, null, null),
 
 -- Clubs
-('MeleeWeapon', 'Club', null, null, 30),
-('MeleeWeapon', 'Extendable Baton', null, null, 50),
-('MeleeWeapon', 'Sap', null, null, 30),
-('MeleeWeapon', 'Staff', null, null, 50),
-('MeleeWeapon', 'Stun Baton', 4, 'R', 400)
+('MeleeWeapon', 'Club', null, null, 30, null, null),
+('MeleeWeapon', 'Extendable Baton', null, null, 50, null, null),
+('MeleeWeapon', 'Sap', null, null, 30, null, null),
+('MeleeWeapon', 'Staff', null, null, 50, null, null),
+('MeleeWeapon', 'Stun Baton', 4, 'R', 400, null, null),
 
 -- Exotic
-('MeleeWeapon', 'Monofilament Whip', 12, 'F', 3000),
-('MeleeWeapon', 'Pole Arm', 4, 'R', 1000),
+('MeleeWeapon', 'Monofilament Whip', 12, 'F', 3000, null, null),
+('MeleeWeapon', 'Pole Arm', 4, 'R', 1000, null, null),
 
 -- Unarmed
-('MeleeWeapon', 'Shock Glove', 3, 'R', 200)
+('MeleeWeapon', 'Shock Glove', 3, 'R', 200, null, null),
 
 -- Projectile weapons
-('ProjectileWeapon', 'Bow', 2, null, 100), -- Rating
-('ProjectileWeapon', 'Light Crossbow', 2, null, 300),
-('ProjectileWeapon', 'Medium Crossbow', 4, 'R', 500),
-('ProjectileWeapon', 'Heavy Crossbow', 8, 'R', 750),
+('ProjectileWeapon', 'Bow', 2, null, 100, null, null), -- Rating
+('ProjectileWeapon', 'Light Crossbow', 2, null, 300, null, null),
+('ProjectileWeapon', 'Medium Crossbow', 4, 'R', 500, null, null),
+('ProjectileWeapon', 'Heavy Crossbow', 8, 'R', 750, null, null),
 
 -- Thrown weapons
-('ProjectileWeapon', 'Shuriken', 2, null, 30),
-('ProjectileWeapon', 'Throwing Knife', 2, null, 20),
+('ProjectileWeapon', 'Shuriken', 2, null, 30, null, null),
+('ProjectileWeapon', 'Throwing Knife', 2, null, 20, null, null),
 
 -- Tasers
-('Firearms', 'Defiance EX Shocker', null, null, 150),
-('Firearms', 'Yamaha Pulsar', null, null, 150),
+('Firearms', 'Defiance EX Shocker', null, null, 150, null, null),
+('Firearms', 'Yamaha Pulsar', null, null, 150, null, null),
 
 -- Hold-out
-('Firearms', 'Raecor Sting', 6, 'R', 350),
-('Firearms', 'Streetline Special', 4, 'R', 100),
+('Firearms', 'Raecor Sting', 6, 'R', 350, null, null),
+('Firearms', 'Streetline Special', 4, 'R', 100, null, null),
 
 -- Light Pistols
-('Firearms', 'Colt America L36', 4, 'R', 150),
-('Firearms', 'Fichetti Security 600', 6, 'R', 450),
-('Firearms', 'Hammerli 620S', 8, 'R', 650),
-('Firearms', 'Yamaha Sakura Fubuki', 10, 'R', 2000),
+('Firearms', 'Colt America L36', 4, 'R', 150, null, null),
+('Firearms', 'Fichetti Security 600', 6, 'R', 450, null, null),
+('Firearms', 'Hammerli 620S', 8, 'R', 650, null, null),
+('Firearms', 'Yamaha Sakura Fubuki', 10, 'R', 2000, null, null),
 
 -- Heavy Pistols
-('Firearms', 'Ares Predator IV', 4, 'R', 350),
-('Firearms', 'Ares Viper Slivergun', 5, 'R', 500),
-('Firearms', 'Colt Manhunter', 4, 'R', 300),
-('Firearms', 'Remington Roomsweeper', 6, 'R', 250),
-('Firearms', 'Ruger Super Warhawk', 3, 'R', 250),
+('Firearms', 'Ares Predator IV', 4, 'R', 350, null, null),
+('Firearms', 'Ares Viper Slivergun', 5, 'R', 500, null, null),
+('Firearms', 'Colt Manhunter', 4, 'R', 300, null, null),
+('Firearms', 'Remington Roomsweeper', 6, 'R', 250, null, null),
+('Firearms', 'Ruger Super Warhawk', 3, 'R', 250, null, null),
 
 -- Machine Pistols
-('Firearms', 'Ceska Black Scorpion', 3, 'R', 250),
-('Firearms', 'Steyr TMP', 8, 'R', 600),
+('Firearms', 'Ceska Black Scorpion', 3, 'R', 250, null, null),
+('Firearms', 'Steyr TMP', 8, 'R', 600, null, null),
 
 -- Submachine Guns
-('Firearms', 'AK-97 Carbine', 4, 'R', 400),
-('Firearms', 'HK-227X', 8, 'R', 800),
-('Firearms', 'HK MP-5 TX', 4, 'R', 550),
-('Firearms', 'Ingram Smartgun X', 6, 'R', 650),
-('Firearms', 'Uzi IV', 4, 'R', 500),
+('Firearms', 'AK-97 Carbine', 4, 'R', 400, null, null),
+('Firearms', 'HK-227X', 8, 'R', 800, null, null),
+('Firearms', 'HK MP-5 TX', 4, 'R', 550, null, null),
+('Firearms', 'Ingram Smartgun X', 6, 'R', 650, null, null),
+('Firearms', 'Uzi IV', 4, 'R', 500, null, null),
 
 -- Assault Rifles
-('Firearms', 'AK-97', 4, 'R', 500),
-('Firearms', 'Ares Alpha', 12, 'F', 1700),
-('Firearms', 'FN HAR', 8, 'R', 1000),
-('Firearms', 'HK XM30', 15, 'F', 2500)
-('Firearms', 'HK XM30 Shotgun Module', null, null, 1000),
-('Firearms', 'HK XM30 Carbine Module', null, null, 500),
-('Firearms', 'HK XM30 Sniper Module', null, null, 1000),
-('Firearms', 'HK XM30 LMG Module', null, null, 1000),
+('Firearms', 'AK-97', 4, 'R', 500, null, null),
+('Firearms', 'Ares Alpha', 12, 'F', 1700, null, null),
+('Firearms', 'FN HAR', 8, 'R', 1000, null, null),
+('Firearms', 'HK XM30', 15, 'F', 2500, null, null),
+('Firearms', 'HK XM30 Shotgun Module', null, null, 1000, null, null),
+('Firearms', 'HK XM30 Carbine Module', null, null, 500, null, null),
+('Firearms', 'HK XM30 Sniper Module', null, null, 1000, null, null),
+('Firearms', 'HK XM30 LMG Module', null, null, 1000, null, null),
 
 -- Sport Rifles
-('Firearms', 'Ruger 100', 4, 'R', 900),
-('Firearms', 'PJSS Elephant Rifle', 12, 'R', 6000),
+('Firearms', 'Ruger 100', 4, 'R', 900, null, null),
+('Firearms', 'PJSS Elephant Rifle', 12, 'R', 6000, null, null),
 
 -- Sniper Rifles
-('Firearms', 'Ranger Arms SM-4', 16, 'F', 6200),
-('Firearms', 'Walter MA-2100', 10, 'F', 5000),
+('Firearms', 'Ranger Arms SM-4', 16, 'F', 6200, null, null),
+('Firearms', 'Walter MA-2100', 10, 'F', 5000, null, null),
 
 -- Shotguns
-('Firearms', 'Mossberg AM-CMDT', 12, 'R', 1000),
-('Firearms', 'Remington 990', 4, 'R', 550),
+('Firearms', 'Mossberg AM-CMDT', 12, 'R', 1000, null, null),
+('Firearms', 'Remington 990', 4, 'R', 550, null, null),
 
 -- Special Weapons
-('Firearms', 'Ares S-III Super Squirt', 4, null, 500),
-('Firearms', 'Fichetti Pain Inducer', 8, 'R', 2000),
-('Firearms', 'Parashield Dart Pistol', 6, 'R', 600),
-('Firearms', 'Parashield Dart Rifle', 6, 'R', 1700),
+('Firearms', 'Ares S-III Super Squirt', 4, null, 500, null, null),
+('Firearms', 'Fichetti Pain Inducer', 8, 'R', 2000, null, null),
+('Firearms', 'Parashield Dart Pistol', 6, 'R', 600, null, null),
+('Firearms', 'Parashield Dart Rifle', 6, 'R', 1700, null, null),
 
 -- LMG
-('Firearms', 'Ingram White Knight', 12, 'F', 2000),
+('Firearms', 'Ingram White Knight', 12, 'F', 2000, null, null),
 
 -- MMG
-('Firearms', 'Stoner-Ares M202', 12, 'F', 4500),
+('Firearms', 'Stoner-Ares M202', 12, 'F', 4500, null, null),
 
 -- HMG
-('Firearms', 'Ultimax HMG-2', 15, 'F', 7500),
+('Firearms', 'Ultimax HMG-2', 15, 'F', 7500, null, null),
 
 -- Assault Cannons
-('Firearms', 'Panther XXL', 20, 'F', 5500),
+('Firearms', 'Panther XXL', 20, 'F', 5500, null, null),
 
 -- Grenade Launchers
-('Firearms', 'Ares Antioch-2', 8, 'F', 600),
-('Firearms', 'ArmTech MGL-12', 10, 'F', 2000),
+('Firearms', 'Ares Antioch-2', 8, 'F', 600, null, null),
+('Firearms', 'ArmTech MGL-12', 10, 'F', 2000, null, null),
 
 -- Missile Launchers
-('Firearms', 'Aztechnology Striker', 10, 'F', 1000),
-('Firearms', 'Mitsubishi Yakusoku MRL', 20, 'F', 12000), 
+('Firearms', 'Aztechnology Striker', 10, 'F', 1000, null, null),
+('Firearms', 'Mitsubishi Yakusoku MRL', 20, 'F', 12000, null, null), 
 
 -- Ammunition
-('Ammunition', 'APDS', 16, 'F', 70),
-('Ammunition', 'Assault Cannon', 16, 'F', 450),
-('Ammunition', 'Explosive Rounds', 8, 'F', 50),
-('Ammunition', 'EX-Explosive Rounds', 12, 'F', 100),
-('Ammunition', 'Flechette Rounds', 2, 'R', 100),
-('Ammunition', 'Gel Rounds', 4, 'R', 30),
-('Ammunition', 'Injection Darts', 4, 'R', 75),
-('Ammunition', 'Regular Ammo', 2, 'R', 20),
-('Ammunition', 'Stick-n-Shock', 5, 'R', 80),
-('Ammunition', 'Tracer', 5, 'R', 75),
-('Ammunition', 'Taser Dart', 2, null, 50),
-('Ammunition', 'Arrow', 2, null, 5),
-('Ammunition', 'Injection Arrow', 8, 'R', 50),
-('Ammunition', 'Crossbow Bolt', 2, null, 5),
-('Ammunition', 'Injection Bolt', 8, 'R', 50)
+('Ammunition', 'APDS', 16, 'F', 70, null, null),
+('Ammunition', 'Assault Cannon', 16, 'F', 450, null, null),
+('Ammunition', 'Explosive Rounds', 8, 'F', 50, null, null),
+('Ammunition', 'EX-Explosive Rounds', 12, 'F', 100, null, null),
+('Ammunition', 'Flechette Rounds', 2, 'R', 100, null, null),
+('Ammunition', 'Gel Rounds', 4, 'R', 30, null, null),
+('Ammunition', 'Injection Darts', 4, 'R', 75, null, null),
+('Ammunition', 'Regular Ammo', 2, 'R', 20, null, null),
+('Ammunition', 'Stick-n-Shock', 5, 'R', 80, null, null),
+('Ammunition', 'Tracer', 5, 'R', 75, null, null),
+('Ammunition', 'Taser Dart', 2, null, 50, null, null),
+('Ammunition', 'Arrow', 2, null, 5, null, null),
+('Ammunition', 'Injection Arrow', 8, 'R', 50, null, null),
+('Ammunition', 'Crossbow Bolt', 2, null, 5, null, null),
+('Ammunition', 'Injection Bolt', 8, 'R', 50, null, null),
 
-('FirearmAccessory', 'Airburst Link', 6, 'R', 500),
-('FirearmAccessory', 'Bipod', 2, null, 100),
-('FirearmAccessory', 'Concealable Holster', 2, null, 75),
-('FirearmAccessory', 'Gas-Vent 2 System', 4, 'R', 200),
-('FirearmAccessory', 'Gas-Vent 3 System', 6, 'R', 400),
-('FirearmAccessory', 'Gyro Stabilization', 7, null, 3000),
-('FirearmAccessory', 'Hidden Gun Arm Slide', 4, null, 350),
-('FirearmAccessory', 'Imaging Scope', 3, null, 300),
-('FirearmAccessory', 'Laser Sight', 2, null, 100),
-('FirearmAccessory', 'Periscope', 3, null, 50),
-('FirearmAccessory', 'Quick-Draw Holster', 4, null, 100),
-('FirearmAccessory', 'Shock Pad', 2, null, 50),
-('FirearmAccessory', 'Silencer', 8, 'F', 200),
-('FirearmAccessory', 'Smart Firing Platform', 12, 'F', 2000),
-('FirearmAccessory', 'Smartgun System, internal', 6, 'R', 0), -- Weapon Cost
-('FirearmAccessory', 'Smartgun System, external', 4, 'R', 400),
-('FirearmAccessory', 'Sound Suppresser', 12, 'F', 300),
-('FirearmAccessory', 'Spare Clips', 4, null, 5),
-('FirearmAccessory', 'Speed Loader', 2, null, 25),
-('FirearmAccessory', 'Tripod', 4, null, 300)
+('FirearmAccessory', 'Airburst Link', 6, 'R', 500, null, null),
+('FirearmAccessory', 'Bipod', 2, null, 100, null, null),
+('FirearmAccessory', 'Concealable Holster', 2, null, 75, null, null),
+('FirearmAccessory', 'Gas-Vent 2 System', 4, 'R', 200, null, null),
+('FirearmAccessory', 'Gas-Vent 3 System', 6, 'R', 400, null, null),
+('FirearmAccessory', 'Gyro Stabilization', 7, null, 3000, null, null),
+('FirearmAccessory', 'Hidden Gun Arm Slide', 4, null, 350, null, null),
+('FirearmAccessory', 'Imaging Scope', 3, null, 300, null, null),
+('FirearmAccessory', 'Laser Sight', 2, null, 100, null, null),
+('FirearmAccessory', 'Periscope', 3, null, 50, null, null),
+('FirearmAccessory', 'Quick-Draw Holster', 4, null, 100, null, null),
+('FirearmAccessory', 'Shock Pad', 2, null, 50, null, null),
+('FirearmAccessory', 'Silencer', 8, 'F', 200, null, null),
+('FirearmAccessory', 'Smart Firing Platform', 12, 'F', 2000, null, null),
+('FirearmAccessory', 'Smartgun System, internal', 6, 'R', 0, null, null), -- Weapon Cost
+('FirearmAccessory', 'Smartgun System, external', 4, 'R', 400, null, null),
+('FirearmAccessory', 'Sound Suppresser', 12, 'F', 300, null, null),
+('FirearmAccessory', 'Spare Clips', 4, null, 5, null, null),
+('FirearmAccessory', 'Speed Loader', 2, null, 25, null, null),
+('FirearmAccessory', 'Tripod', 4, null, 300, null, null),
 
-('Grenade', 'Flash-Bang Grenade', 6, 'R', 30),
-('Grenade', 'Flash-Pak', 4, null, 200),
-('Grenade', 'Fragmentation Grenade', 10, 'F', 35),
-('Grenade', 'High Explosive Grenade', 7, 'F', 45),
-('Grenade', 'Gas Grenade', 4, null, 20),
-('Grenade', 'Smoke Grenade', 4, 'R', 30),
-('Grenade', 'Thermal Smoke Grenade', 6, 'R', 35),
+('Grenade', 'Flash-Bang Grenade', 6, 'R', 30, null, null),
+('Grenade', 'Flash-Pak', 4, null, 200, null, null),
+('Grenade', 'Fragmentation Grenade', 10, 'F', 35, null, null),
+('Grenade', 'High Explosive Grenade', 7, 'F', 45, null, null),
+('Grenade', 'Gas Grenade', 4, null, 20, null, null),
+('Grenade', 'Smoke Grenade', 4, 'R', 30, null, null),
+('Grenade', 'Thermal Smoke Grenade', 6, 'R', 35, null, null),
 
-('Grenade', 'Anti-Vehicle Rocket', 20, 'F', 1000),
-('Grenade', 'Fragmentation Rocket', 16, 'F', 500),
-('Grenade', 'High Explosive Rocket', 20, 'F', 750),
+('Grenade', 'Anti-Vehicle Rocket', 20, 'F', 1000, null, null),
+('Grenade', 'Fragmentation Rocket', 16, 'F', 500, null, null),
+('Grenade', 'High Explosive Rocket', 20, 'F', 750, null, null),
 
-('Explosive', 'Commercial Explosive', 8, 'R', 100),
-('Explosive', 'Foam Explosive', 12, 'F', 100),
-('Explosive', 'Plastic Explosive', 16, 'F', 100),
+('Explosive', 'Commercial Explosive', 8, 'R', 100, null, null),
+('Explosive', 'Foam Explosive', 12, 'F', 100, null, null),
+('Explosive', 'Plastic Explosive', 16, 'F', 100, null, null),
 
-('ExplosiveAccessories', 'Detonator Cap', 8, 'R', 75),
+('ExplosiveAccessories', 'Detonator Cap', 8, 'R', 75, null, null),
 
-('Armour', 'Leather Jacket', null, null, 200),
-('Armour', 'Feedback Clothing', 8, null, 500),
-('Armour', 'Actioneer Business Clothes', 8, null, 1500),
-('Armour', 'Armor Clothing', 2, null, 500),
-('Armour', 'Armor Jacket', 2, null, 900),
-('Armour', 'Armor Vest', 4, null, 600),
-('Armour', 'Camouflage Suit', 4, null, 1200),
-('Armour', 'Chameleon Suit', 10, 'R', 8000),
-('Armour', 'Full Body Armor', 14, 'R', 6000),
-('ArmourExtra', 'Full Body Helmet', null, null, 1000),
-('ArmourExtra', 'Full Body Chemical Seal', 6, null, 5000),
-('ArmourExtra', 'Full Body Environment Adaptation', 3, null, 2000),
-('Armour', 'Lined Coat', 2, null, 700),
-('Armour', 'Urban Explorer Jumpsuit', 8, null, 500),
-('ArmourExtra', 'Urban Explorer Helmet', null, null, 50),
-('Armour', 'Helmet', 2, null, 100),
-('Armour', 'Ballistic Shield', 12, 'R', 1500),
-('Armour', 'Riot Shield', 6, 'R', 200),
-('Armour', 'Taser Shield', 10, 'R', 750),
+('Armour', 'Leather Jacket', null, null, 200, null, null),
+('Armour', 'Feedback Clothing', 8, null, 500, null, null),
+('Armour', 'Actioneer Business Clothes', 8, null, 1500, null, null),
+('Armour', 'Armor Clothing', 2, null, 500, null, null),
+('Armour', 'Armor Jacket', 2, null, 900, null, null),
+('Armour', 'Armor Vest', 4, null, 600, null, null),
+('Armour', 'Camouflage Suit', 4, null, 1200, null, null),
+('Armour', 'Chameleon Suit', 10, 'R', 8000, null, null),
+('Armour', 'Full Body Armor', 14, 'R', 6000, null, null),
+('ArmourExtra', 'Full Body Helmet', null, null, 1000, null, null),
+('ArmourExtra', 'Full Body Chemical Seal', 6, null, 5000, null, null),
+('ArmourExtra', 'Full Body Environment Adaptation', 3, null, 2000, null, null),
+('Armour', 'Lined Coat', 2, null, 700, null, null),
+('Armour', 'Urban Explorer Jumpsuit', 8, null, 500, null, null),
+('ArmourExtra', 'Urban Explorer Helmet', null, null, 50, null, null),
+('Armour', 'Helmet', 2, null, 100, null, null),
+('Armour', 'Ballistic Shield', 12, 'R', 1500, null, null),
+('Armour', 'Riot Shield', 6, 'R', 200, null, null),
+('Armour', 'Taser Shield', 10, 'R', 750, null, null),
 
 -- Armour modifications still missing!
 
-('Commlink', 'Meta Link', null, null, 100),
-('Commlink', 'CMT Clip', null, null, 300),
-('Commlink', 'Sony Emperor', null, null, 700),
-('Commlink', 'Renraku Sensei', null, null, 1000),
-('Commlink', 'Novatech Airware', null, null, 1250),
-('Commlink', 'Erika Elite', null, null, 2500),
-('Commlink', 'Hermes Ikon', null, null, 3000),
-('Commlink', 'Transys Avalon', null, null, 5000),
-('Commlink', 'Fairlight Caliban', null, null, 8000)
+('Commlink', 'Meta Link', null, null, 100, null, null),
+('Commlink', 'CMT Clip', null, null, 300, null, null),
+('Commlink', 'Sony Emperor', null, null, 700, null, null),
+('Commlink', 'Renraku Sensei', null, null, 1000, null, null),
+('Commlink', 'Novatech Airware', null, null, 1250, null, null),
+('Commlink', 'Erika Elite', null, null, 2500, null, null),
+('Commlink', 'Hermes Ikon', null, null, 3000, null, null),
+('Commlink', 'Transys Avalon', null, null, 5000, null, null),
+('Commlink', 'Fairlight Caliban', null, null, 8000, null, null),
 
-('OS', 'Vector Xim', null, null, 200),
-('OS', 'Redcap Nix', null, null, 400),
-('OS', 'Renraku Ichi', null, null, 600),
-('OS', 'Mangadyne Deva', null, null, 800),
-('OS', 'Iris Orb', null, null, 1000),
-('OS', 'Novatech Navi', null, null, 1500)
+('OS', 'Vector Xim', null, null, 200, null, null),
+('OS', 'Redcap Nix', null, null, 400, null, null),
+('OS', 'Renraku Ichi', null, null, 600, null, null),
+('OS', 'Mangadyne Deva', null, null, 800, null, null),
+('OS', 'Iris Orb', null, null, 1000, null, null),
+('OS', 'Novatech Navi', null, null, 1500, null, null)
 ;
 
 INSERT INTO OperatingSystems
@@ -609,7 +713,7 @@ VALUES
 ('Knife', null, '(STR/2 + 1) P', null),
 ('Monofilament Sword', 1, '(STR/2 + 3) P', '-1'),
 ('Survival Knife', null, '(STR/2 + 1) P', '-1'),
-('Sword', 1, '(STR/2 + 3) P', null)
+('Sword', 1, '(STR/2 + 3) P', null),
 
 -- Clubs
 ('Club', 1, '(STR/2 + 1) P', null),
@@ -631,37 +735,6 @@ VALUES
 INSERT INTO Firearms
 (Name, Damage, AP, FiringMode, RC, Ammo)
 VALUES
--- Tasers
-('Defiance EX Shocker', null, null, 150),
-('Yamaha Pulsar', null, null, 150),
-
--- Hold-out
-('Raecor Sting', 6, 'R', 350),
-('Streetline Special', 4, 'R', 100),
-
--- Light Pistols
-('Colt America L36', 4, 'R', 150),
-('Fichetti Security 600', 6, 'R', 450),
-('Hammerli 620S', 8, 'R', 650),
-('Yamaha Sakura Fubuki', 10, 'R', 2000),
-
--- Heavy Pistols
-('Ares Predator IV', 4, 'R', 350),
-('Ares Viper Slivergun', 5, 'R', 500),
-('Colt Manhunter', 4, 'R', 300),
-('Remington Roomsweeper', 6, 'R', 250),
-('Ruger Super Warhawk', 3, 'R', 250),
-
--- Machine Pistols
-('Ceska Black Scorpion', 3, 'R', 250),
-('Steyr TMP', 8, 'R', 600),
-
--- Submachine Guns
-('AK-97 Carbine', 4, 'R', 400),
-('HK-227X', 8, 'R', 800),
-('HK MP-5 TX', 4, 'R', 550),
-('Ingram Smartgun X', 6, 'R', 650),
-('Uzi IV', 4, 'R', 500),
 -- (Name, Damage, AP, FiringMode, RC, Ammo)
 -- Assault Rifles
 ('AK-97', '6P', '-1', 'SA/BF/FA', null, '38 (c)'),
@@ -698,7 +771,7 @@ VALUES
 ('Stoner-Ares M202', '6P', '-2', 'FA', null, '50 (c) or 100 (belt)'),
 
 -- HMG
-('Ultimax HMG-2', '7P'. '-3', 'FA', '3 (10)', '50 (c) or 100 (belt)'),
+('Ultimax HMG-2', '7P', '-3', 'FA', '3 (10)', '50 (c) or 100 (belt)'),
 
 -- Assault Cannons
 ('Panther XXL', '10P', '-5', 'SS', '1', '15 (C)'),

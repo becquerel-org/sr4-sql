@@ -1,397 +1,562 @@
-CREATE TABLE Book
-(BookID INTEGER NOT NULL PRIMARY KEY,
-Title TEXT);
+    create table Book
+(BookID integer not null primary key,
+Title text);
 
-CREATE TABLE Characters
+create table Messages
 (
-CharacterID INTEGER NOT NULL PRIMARY KEY,
-CharacterName TEXT NOT NULL,
-CharacterMetatypeID INTEGER NOT NULL,
-CharacterDescription TEXT,
-CharacterTotalBP INTEGER,
-CharacterTotalKarma INTEGER,
-CharacterCurrentKarma INTEGER,
-CharacterStreetCred INTEGER,
-CharacterNotoriety INTEGER
+Message text not null primary key,
+Fatal boolean
 );
 
-CREATE TABLE Metatype
+insert into Messages (Message, Fatal) values ('One or more attributes out of bounds', 1);
+
+create table Characters
 (
-MetatypeID INTEGER NOT NULL PRIMARY KEY,
-Name TEXT NOT NULL,
-MetavariantID INTEGER,
-BaseStrength INTEGER NOT NULL,
-BaseBody INTEGER NOT NULL,
-BaseAgility INTEGER NOT NULL,
-BaseIntuition INTEGER NOT NULL,
-BaseLogic INTEGER NOT NULL,
-BaseCharisma INTEGER NOT NULL,
-BaseWillpower INTEGER NOT NULL,
-BaseEdge INTEGER NOT NULL,
-MaxStrength INTEGER NOT NULL, -- unaugmented
-MaxBody INTEGER NOT NULL,
-MaxAgility INTEGER NOT NULL,
-MaxIntuition INTEGER NOT NULL,
-MaxLogic INTEGER NOT NULL,
-MaxCharisma INTEGER NOT NULL,
-MaxWillpower INTEGER NOT NULL,
-MaxEdge INTEGER NOT NULL,
-BPCost INTEGER NOT NULL
+CharacterID integer not null primary key,
+Name text not null,
+Metatype text not null,
+Description text,
+TotalBP integer,
+TotalKarma integer,
+CurrentKarma integer,
+StreetCred integer,
+Notoriety integer
 );
 
-CREATE TABLE CharacterAttributes
+create table Metatypes
 (
-CharacterID INTEGER NOT NULL,
-BodyAttr INTEGER NOT NULL, -- "Body" doesn't seem to work...
-Agility INTEGER NOT NULL,
-Strength INTEGER NOT NULL,
-Intuition INTEGER NOT NULL,
-Logic INTEGER NOT NULL,
-Charisma INTEGER NOT NULL,
-Willpower INTEGER NOT NULL,
-Essence  INTEGER NOT NULL,
-Edge INTEGER NOT NULL,
-Magic INTEGER, -- needs constraint, can be NULL
-Resonance INTEGER, -- needs constraint, can be NULL
-FOREIGN KEY(CharacterID) REFERENCES Characters(CharacterID)
+Name text not null primary key,
+BaseBody integer not null,
+BaseAgility integer not null,
+BaseReaction integer not null,
+BaseStrength integer not null,
+BaseCharisma integer not null,
+BaseIntuition integer not null,
+BaseLogic integer not null,
+BaseWillpower integer not null,
+BaseEdge integer not null,
+MaxBody integer not null,
+MaxAgility integer not null,
+MaxReaction integer not null,
+MaxStrength integer not null,
+MaxCharisma integer not null,
+MaxIntuition integer not null,
+MaxLogic integer not null,
+MaxWillpower integer not null,
+MaxEdge integer not null,
+BPCost integer not null
+);
+
+create table MetatypeSpecials
+(
+Metatype text not null, 
+Special text not null,
+foreign key (Metatype) references Metatype(Name)
+);
+
+create view CharacterMetatypes as select
+CharacterID,
+BaseBody,
+BaseAgility,
+BaseReaction,
+BaseStrength,
+BaseCharisma,
+BaseIntuition,
+BaseLogic,
+BaseWillpower,
+BaseEdge,
+MaxBody,
+MaxAgility,
+MaxReaction,
+MaxStrength,
+MaxCharisma,
+MaxIntuition,
+MaxLogic,
+MaxWillpower,
+MaxEdge
+from Characters inner join Metatypes on Characters.Metatype = Metatypes.Name;
+-- 
+create table CharacterAttributes
+(
+CharacterID integer not null,
+BodyAttr integer not null, -- "Body" doesn't seem to work...
+Agility integer not null,
+Strength integer not null,
+Reaction integer not null,
+Intuition integer not null,
+Logic integer not null,
+Charisma integer not null,
+Willpower integer not null,
+Essence  integer not null,
+Edge integer not null,
+Magic integer, -- needs constraint, can be NULL
+Resonance integer, -- needs constraint, can be NULL
+Message text,
+foreign key(CharacterID) references Characters(CharacterID),
+foreign key(Message) references Messages(Message)
+
+);
+
+create trigger chk_attributes after insert on CharacterAttributes when
+(NEW.BodyAttr > (select MaxBody - BaseBody from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.BodyAttr < 0) or
+(NEW.Reaction > (select MaxReaction - BaseReaction from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Reaction < 0) or
+(NEW.Agility > (select MaxAgility - BaseAgility from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Agility < 0) or
+(NEW.Strength > (select MaxStrength - BaseStrength from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Strength < 0) or
+(NEW.Logic > (select MaxLogic - BaseLogic from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Logic < 0) or
+(NEW.Intuition > (select MaxIntuition - BaseIntuition from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Intuition < 0) or
+(NEW.Charisma > (select MaxCharisma - BaseCharisma from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Charisma < 0) or
+(NEW.Willpower > (select MaxWillpower - BaseWillpower from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Willpower < 0) or
+(NEW.Edge > (select MaxEdge - BaseEdge from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Edge < 0) or
+(NEW.Magic > (6 + (select InitiationGrade from CharacterInitiation where CharacterID = NEW.CharacterID limit 1)) or NEW.Magic < 0) or
+(NEW.Resonance > (6 + (select SubmersionGrade from CharacterSubmersion where CharacterID = NEW.CharacterID limit 1)) or NEW.Resonance < 0) 
+begin
+  update CharacterAttributes set Message = 'One or more attributes out of bounds';
+end;
+
+create table CharacterConnections
+(
+CharacterID integer not null,
+Name integer not null,
+Description text,
+Rating integer not null,
+Influence integer not null,
+foreign key(CharacterID) references Characters(CharacterID)
+);
+
+create table Skills
+(
+Name text not null primary key,
+SkillGroup text,
+IsActive boolean not null, 
+CanDefault boolean not null,
+SkillAttribute text,
+Description text,
+foreign key(SkillGroup) references SkillGroups(Name)
+);
+
+create table SkillGroups
+(
+Name text not null primary key
+);
+
+create table CharacterSkills
+(
+CharacterID  integer not null,  
+Skill text not null, 
+Rating  integer not null,
+Grouped boolean not null,
+Specialisation text,
+foreign key(CharacterID) references Characters(CharacterID),
+foreign key(Skill) references Skills(Name)
 );
 
 
-CREATE TABLE CharacterConnections
+create table SkillReferences
 (
-CharacterID INTEGER NOT NULL,
-Name INTEGER NOT NULL,
-Description TEXT,
-Rating INTEGER NOT NULL,
-Influence INTEGER NOT NULL,
-FOREIGN KEY(CharacterID) REFERENCES Characters(CharacterID)
+Skill text not null,
+BookID integer not null,
+Page integer,
+foreign key(Skill) references Skills(Name),
+foreign key(BookID) references Books(BookID)
 );
 
-CREATE TABLE Skills
+create table Qualities
 (
-Name TEXT NOT NULL PRIMARY KEY,
-SkillGroup TEXT,
-IsActive BOOLEAN NOT NULL, 
-CanDefault BOOLEAN NOT NULL,
-SkillAttribute TEXT,
-Description TEXT,
-Multiple BOOLEAN, -- Can this skill be taken multiple times? e.g. Exotic Weapons
-FOREIGN KEY(SkillGroupID) REFERENCES SkillGroups(SkillGroupID)
-);
-
-CREATE TABLE SkillGroups
-(
-Name TEXT NOT NULL PRIMARY KEY
-);
-
-CREATE TABLE CharacterSkills
-(
-CharacterID  INTEGER NOT NULL,
-SkillName TEXT NOT NULL, 
-Rating  INTEGER NOT NULL,
-Grouped BOOLEAN NOT NULL,
-Specialisation TEXT,
-FOREIGN KEY(CharacterID) REFERENCES Characters(CharacterID),
-FOREIGN KEY(SkillID) REFERENCES Skills(SkillID)
-);
-
-CREATE TRIGGER multiple_skills INSTEAD OF INSERT ON CharacterSkills
-  WHEN EXISTS (SELECT Multiple FROM Skills WHERE Name = NEW.SkillName AND Multiple = 1)
-  BEGIN
-  INSERT INTO CharacterSkills (CharacterID, SkillName, Rating, Grouped, Specialisation, Description)
-  VALUES
-  (NEW.CharacterID, NEW.SkillName + ' (' + NEW.Description + ')', NEW.Rating, NEW.Grouped, NEW.Specialisation);
-  END;
-
-CREATE TABLE SkillReferences
-(
-Skill TEXT NOT NULL,
-BookID INTEGER NOT NULL,
-Page INTEGER,
-FOREIGN KEY(SkillID) REFERENCES Skills(SkillID),
-FOREIGN KEY(BookID) REFERENCES Books(BookID)
-);
-
-CREATE TABLE Qualities
-(
-Name TEXT NOT NULL PRIMARY KEY,
-BPCost INTEGER NOT NULL, -- for negative qualities, the BP cost will be negative;
+Name text not null primary key,
+BPCost integer not null, -- for negative qualities, the BP cost will be negative;
 -- KarmaCost = 2 * BP cost
-Description TEXT
+Description text
 );
 
-CREATE TABLE CharacterQualities
+create table CharacterQualities
 (
-CharacterID INTEGER NOT NULL,
-Quality TEXT NOT NULL,
-Description TEXT,
-FOREIGN KEY (CharacterID) REFERENCES Characters(CharacterID),
-FOREIGN KEY (QualityID) REFERENCES Qualities(QualityID)
-);
-
-
-
-CREATE TABLE QualityReferences
-(
-QualityID INTEGER NOT NULL,
-BookID INTEGER NOT NULL,
-Page INTEGER,
-FOREIGN KEY(QualityID) REFERENCES Qualities(QualityID),
-FOREIGN KEY(BookID) REFERENCES Books(BookID)
-);
-
-CREATE TABLE Gear
-(
-GearType TEXT NOT NULL,
-GearName TEXT NOT NULL,
-Availability INTEGER,
-Restriction TEXT,
-NuyenCost INTEGER NOT NULL,
-MinRating INTEGER NOT NULL, -- if item has no rating, choose (0, 0)
-MaxRating INTEGER NOT NULL,
-CONSTRAINT pk_gear PRIMARY KEY (GearType, GearName)
+CharacterID integer not null,
+Quality text not null,
+Description text,
+foreign key (CharacterID) references Characters(CharacterID),
+foreign key (Quality) references Qualities(Name)
 );
 
 
-CREATE TABLE CharacterGear
+
+create table QualityReferences
 (
-CharacterID INTEGER NOT NULL,
-GearType INTEGER NOT NULL,
-GearName INTEGER NOT NULL
-Quantity INTEGER NOT NULL,
-Rating INTEGER,
-Description TEXT,
-FOREIGN KEY (CharacterID) REFERENCES Characters(CharacterID),
-FOREIGN KEY (GearType) REFERENCES Gear(GearType),
-FOREIGN KEY (GearName) REFERENCES Gear(GearName)
+Quality text not null,
+BookID integer not null,
+Page integer,
+foreign key(Quality) references Qualities(Name),
+foreign key(BookID) references Books(BookID)
 );
 
-CREATE TABLE GearReferences
+create table Gear
 (
-GearID INTEGER NOT NULL,
-BookID INTEGER NOT NULL,
-Page INTEGER,
-FOREIGN KEY(GearID) REFERENCES Gear(GearID),
-FOREIGN KEY(BookID) REFERENCES Books(BookID)
+GearType text not null,
+GearName text not null,
+Availability integer,
+Restriction text,
+NuyenCost integer not null, -- if item has a rating, choose nuyen cost per rating point
+MinRating integer, 
+MaxRating integer,
+constraint pk_gear primary key (GearType, GearName),
+constraint chk_rating_null check ((MinRating is not null and MaxRating is not null) or (MinRating is null and MaxRating is null)),
+constraint chk_rating_minmax check (MinRating <= MaxRating)
 );
 
-CREATE TABLE MeleeWeapons
+
+create table CharacterGear
 (
-Name TEXT PRIMARY KEY,
-Reach INTEGER,
-Damage TEXT,
-AP TEXT
+CharacterID integer not null,
+GearType text not null,
+GearName text not null,
+Quantity integer not null,
+Rating integer,
+Description text,
+foreign key (CharacterID) references Characters(CharacterID),
+foreign key (GearType) references Gear(GearType),
+foreign key (GearName) references Gear(GearName)
 );
 
-CREATE TABLE ProjectileWeapons
+create trigger chk_gear_rating after insert on CharacterGear
+when (exists (select MinRating from Gear where Gear.GearType = CharacterGear.GearType and Gear.GearName = CharacterGear.GearName and not (CharacterGear.Rating between Gear.MinRating and Gear.MaxRating)))
+begin
+DELETE FROM CharacterGear  where Gear.GearType = CharacterGear.GearType and Gear.GearName = CharacterGear.GearName;
+end;
+
+create table GearReferences
 (
-Name TEXT PRIMARY KEY,
-Damage TEXT,
-AP TEXT
+GearID integer not null,
+BookID integer not null,
+Page integer,
+foreign key(GearID) references Gear(GearID),
+foreign key(BookID) references Books(BookID)
 );
 
-CREATE TABLE Firearms
+create table MeleeWeapons
 (
-Name TEXT PRIMARY KEY,
-Damage TEXT,
-AP TEXT,
-FiringMode TEXT,
-RC TEXT,
-Ammo TEXT
+Name text not null primary key,
+Reach integer,
+Damage text,
+AP text
 );
 
-CREATE TABLE Ammunition
+create table ProjectileWeapons
 (
-Name TEXT PRIMARY KEY,
-DmgModifier TEXT,
-APModifier TEXT,
-ArmourUsed TEXT
+Name text not null primary key,
+Damage text not null,
+AP text
 );
 
-CREATE TABLE FirearmAccessories
+create table Firearms
 (
-Name TEXT PRIMARY KEY,
-Mount TEXT
+Name text not null primary key,
+Damage text not null,
+AP text,
+FiringMode text not null,
+RC text,
+Ammo text not null
 );
 
-CREATE TABLE Grenades -- also contains rockets and missiles
+create table Ammunition
 (
-Name TEXT PRIMARY KEY,
-Damage TEXT,
-AP TEXT,
-Blast TEXT
+Name text not null primary key,
+DmgModifier text,
+APModifier text,
+ArmourUsed text
 );
 
-CREATE TABLE Armour
+create table FirearmAccessories
 (
-Name TEXT PRIMARY KEY,
-Ballistic INTEGER,
-Impact INTEGER
+Name text not null primary key,
+Mount text not null
 );
 
-CREATE TABLE Commlinks
+create table Grenades -- also contains rockets and missiles
 (
-Model TEXT PRIMARY KEY,
-Response INTEGER NOT NULL,
-Signal INTEGER NOT NULL
+Name text not null primary key,
+Damage text,
+AP text,
+Blast text
 );
 
-CREATE TABLE OperatingSystems
+create table Armour
 (
-Name TEXT PRIMARY KEY,
-Firewall INTEGER NOT NULL,
-System INTEGER NOT NULL
+Name text not null primary key,
+Ballistic integer,
+Impact integer
 );
 
-CREATE TABLE Electronics
+create table Commlinks
 (
-Name TEXT PRIMARY KEY,
-DeviceRating INTEGER
+Model text not null primary key,
+Response integer not null,
+Signal integer not null
+);
+
+create table OperatingSystems
+(
+Name text not null primary key,
+Firewall integer not null,
+System integer not null
+);
+
+create table Electronics
+(
+Name text not null primary key,
+DeviceRating integer not null
+);
+
+create table SensorDevices
+(
+Name text not null primary key,
+MinCapacity integer not null,
+MaxCapacity integer  not null
+);
+
+create table SensorFunctions
+(
+Name text not null primary key,
+SensorDeviceName text not null,
+CapacityUsed integer not null,
+foreign key (SensorDeviceName) references SensorDevices(Name)
+);
+
+create table Cyberware
+(
+Name text not null primary key,
+Essence number,
+CapacityRating number
 );
 -- insert half a billion gear tables here
-
-CREATE TABLE Spells
+create table Bioware
 (
-Name TEXT NOT NULL PRIMARY KEY,
-Category TEXT NOT NULL,
-SpellType TEXT NOT NULL,
-SpellRange TEXT NOT NULL,
-Threshold INTEGER,
-Duration TEXT NOT NULL,
-DrainValue TEXT NOT NULL,
-SpellDescriptors TEXT,
-Description TEXT
+Name text not null primary key,
+Essence number
+);
+
+create table Vehicle
+(
+Name text not null primary key,
+Handling integer not null,
+Accel1 integer not null,
+Accel2 integer not null,
+Speed integer not null,
+Pilot integer not null,
+VBody integer not null,
+Armour integer not null,
+Sensor integer not null
+);
+
+create table VehicleAutosofts
+(
+Name text not null primary key,
+VehicleName text,
+Rating integer,
+foreign key (VehicleName) references Vehicle(Name)
+);
+
+create table Spells
+(
+Name text not null primary key,
+SpellCategory text not null,
+SpellType text not null,
+SpellRange text not null,
+DamageType text,
+Threshold integer,
+Duration text not null,
+DrainValue text not null,
+SpellDescriptors text,
+Description text
 -- stuff
 );
 
-CREATE TABLE CharacterSpells
+create table CharacterSpells
 (
-CharacterID INTEGER NOT NULL, -- constraint for character having to have Magic? Probably not; a magician could burn out and lose their magic, too
-Spell TEXT NOT NULL,
-FOREIGN KEY (CharacterID) REFERENCES Characters(CharacterID),
-FOREIGN KEY (SpellID) REFERENCES Spells(SpellID)
+CharacterID integer not null, -- constraint for character having to have Magic? Probably not; a magician could burn out and lose their magic, too
+Spell text not null,
+foreign key (CharacterID) references Characters(CharacterID),
+foreign key (Spell) references Spells(Name)
 );
 
-CREATE TABLE SpellReferences
+create table SpellReferences
 (
-Spell TEXT NOT NULL,
-BookID INTEGER NOT NULL,
-Page INTEGER,
-FOREIGN KEY(SpellID) REFERENCES Spells(SpellID),
-FOREIGN KEY(BookID) REFERENCES Books(BookID)
+Spell text not null,
+BookID integer, -- if ID is null, assume user-generated content
+Page integer,
+foreign key(Spell) references Spells(Name),
+foreign key(BookID) references Books(BookID)
 );
 
-CREATE TABLE CharacterInitiation
+create table Powers
 (
-CharacterID INTEGER NOT NULL,
-InitiationGrade INTEGER NOT NULL,
-FOREIGN KEY (CharacterID) REFERENCES Characters(CharacterID)
+Name text not null primary key,
+PCost number not null,
+Leveled boolean,
+Description text
 );
 
-CREATE TABLE Metamagic
+create table CharacterPowers
 (
-MetamagicID INTEGER NOT NULL PRIMARY KEY,
-Name TEXT NOT NULL
+CharacterID integer not null,
+PowerName text not null,
+PLevel number,
+foreign key (CharacterID) references Characters(CharacterID),
+foreign key (PowerName) references Powers(Name)
 );
 
--- CREATE TABLE CharacterMetamagic
--- (
--- CharacterID INTEGER NOT NULL,
+create trigger chk_plevel after insert on CharacterPowers
+when exists (select PLevel, Magic from (CharacterPowers inner join Powers on Powers.Name = CharacterPowers.PowerName 
+                                                inner join CharacterAttributes on CharacterPowers.CharacterID = CharacterAttributes.CharacterID)
+                                  where PLevel > Magic)
+begin
+ delete from CharacterPowers where (CharacterID = new.CharacterID and PowerName = new.PowerName);
+end;
 
-
-CREATE TABLE ComplexForms
+create table CharacterInitiation
 (
-Name TEXT NOT NULL PRIMARY KEY,
-Description TEXT
+CharacterID integer not null,
+InitiationGrade integer not null,
+foreign key (CharacterID) references Characters(CharacterID)
 );
 
-CREATE TABLE CharacterComplexForms
+create table Metamagic
 (
-CharacterID INTEGER NOT NULL, -- constraint: character must be a TM? Is that necessary here? Probably not.
-ComplexForm TEXT NOT NULL,
-Rating INTEGER NOT NULL,
-FOREIGN KEY (CharacterID) REFERENCES Characters(CharacterID),
-FOREIGN KEY (ComplexFormID) REFERENCES ComplexForms(ComplexFormID)
+Name text not null,
+Multiple boolean not null,
+Description text
+);
+
+create table CharacterMetamagic
+(
+CharacterID integer not null,
+Metamagic text not null,
+Taken integer not null,
+foreign key (CharacterID) references Characters(CharacterID),
+foreign key (Metamagic) references Metamagic(Name)
 );
 
 
-CREATE TABLE ComplexFormReferences
+
+
+create table ComplexForms
 (
-ComplexFormID INTEGER NOT NULL,
-BookID INTEGER NOT NULL,
-Page INTEGER,
-FOREIGN KEY(ComplexFormID) REFERENCES ComplexForms(ComplexFormID),
-FOREIGN KEY(BookID) REFERENCES Books(BookID)
+Name text not null primary key,
+Description text
 );
 
-CREATE TABLE CharacterSubmersion
+create table CharacterComplexForms
 (
-CharacterID INTEGER NOT NULL,
-SubmersionGrade INTEGER NOT NULL,
-FOREIGN KEY (CharacterID) REFERENCES Characters(CharacterID)
+CharacterID integer not null, 
+ComplexForm text not null,
+Rating integer not null,
+foreign key (CharacterID) references Characters(CharacterID),
+foreign key (ComplexForm) references ComplexForms(ComplexForm)
+);
+
+
+create table ComplexFormReferences
+(
+ComplexFormID integer not null,
+BookID integer,
+Page integer,
+foreign key(ComplexFormID) references ComplexForms(ComplexFormID),
+foreign key(BookID) references Books(BookID)
+);
+
+create table CharacterSubmersion
+(
+CharacterID integer not null,
+SubmersionGrade integer not null,
+foreign key (CharacterID) references Characters(CharacterID)
 );
 
 -- Prerequisite?
-CREATE TABLE Echoes
+create table Echoes
 (
-EchoID INTEGER NOT NULL PRIMARY KEY,
-Name TEXT NOT NULL,
-Multiple BOOLEAN NOT NULL, -- can this echo be taken multiple times?
-Description TEXT
+Name text not null primary key,
+Multiple boolean not null, -- can this echo be taken multiple times?
+Description text
 );
 
-CREATE TABLE CharacterEchoes
-(CharacterID INTEGER NOT NULL,
-EchoID INTEGER NOT NULL,
-Taken INTEGER NOT NULL, -- amount of times the echo has been taken, for echoes that can be taken multiple times
-FOREIGN KEY (CharacterID) REFERENCES Characters(CharacterID),
-FOREIGN KEY (EchoID) REFERENCES Echoes(EchoID),
-CONSTRAINT chk_taken CHECK (Taken > 0)
+create table EchoPrerequisites
+(
+id integer not null primary key,
+Echo text not null,
+Prerequisite text not null,
+foreign key (Echo) references Echoes(Name),
+foreign key (Prerequisite) references Echoes(Name)
 );
 
--- checks whether the character hasn't taken more echoes than she has submersion grades, and that she has Submerged in the first place.
-CREATE TRIGGER chk_submersion_insert AFTER INSERT ON CharacterEchoes
-  WHEN (NOT EXISTS (SELECT SubmersionGrade FROM CharacterSubmersion WHERE CharacterSubmersion.CharacterID = NEW.CharacterID AND SubmersionGrade >= (SELECT SUM(Taken) FROM CharacterEchoes WHERE CharacterID = NEW.CharacterID))
-        OR (NEW.Taken > 1 AND EXISTS (SELECT Multiple FROM Echoes WHERE EchoID = NEW.EchoID AND Multiple = 0)))      
-  BEGIN
-  DELETE FROM CharacterEchoes WHERE CharacterID = NEW.CharacterID;
-  END;
 
-CREATE TRIGGER chk_submersion_update AFTER UPDATE ON CharacterEchoes
-  WHEN (NOT EXISTS (SELECT SubmersionGrade FROM CharacterSubmersion WHERE CharacterSubmersion.CharacterID = NEW.CharacterID AND SubmersionGrade >= (SELECT SUM(Taken) FROM CharacterEchoes WHERE CharacterID = NEW.CharacterID))
-        OR (NEW.Taken > 1 AND EXISTS (SELECT Multiple FROM Echoes WHERE EchoID = NEW.EchoID AND Multiple = 0)))
-  BEGIN
-  DELETE FROM CharacterEchoes WHERE CharacterID = NEW.CharacterID;
-  END;
+
+create table CharacterEchoes
+(CharacterID integer not null,
+Echo text not null,
+Taken integer not null, -- amount of times the echo has been taken, for echoes that can be taken multiple times
+foreign key (CharacterID) references Characters(CharacterID),
+foreign key (Echo) references Echoes(Name),
+constraint chk_taken check (Taken > 0)
+);
+
+-- checks whether the character hasn't taken more echoes than she has submersion grades, and that she has Submerged in the first place; also checks if echo has prerequisites
+create trigger chk_submersion_insert after insert on CharacterEchoes
+  when (not exists (select SubmersionGrade from CharacterSubmersion where CharacterSubmersion.CharacterID = NEW.CharacterID 
+                                            and SubmersionGrade >= (select SUM(Taken) from CharacterEchoes where CharacterID = NEW.CharacterID))
+        or (NEW.Taken > 1 and exists (select Multiple from Echoes where Name = NEW.Name and Multiple = 0))
+        or ((exists (select Prerequisite from EchoPrerequisites where Echo = NEW.Name)) and (not exists (select Echo from CharacterEchoes left outer join EchoPrerequisites on EchoPrerequisites.Echo = NEW.Name where CharacterEchoes.Echo = EchoPrerequisites.Prerequisite))))
+  begin
+  delete from CharacterEchoes where CharacterID = NEW.CharacterID;
+  end;
+
+create trigger chk_submersion_update after update on CharacterEchoes
+  when (not exists (select SubmersionGrade from CharacterSubmersion where CharacterSubmersion.CharacterID = NEW.CharacterID and SubmersionGrade >= (select SUM(Taken) from CharacterEchoes where CharacterID = NEW.CharacterID))
+        or (NEW.Taken > 1 and exists (select Multiple from Echoes where EchoID = NEW.EchoID and Multiple = 0))
+        or ((exists (select Prerequisite from EchoPrerequisites where Echo = NEW.Name)) and (not exists (select Echo from CharacterEchoes left outer join EchoPrerequisites on EchoPrerequisites.Echo = NEW.Name where CharacterEchoes.Echo = EchoPrerequisites.Prerequisite))))
+  begin
+  delete from CharacterEchoes where CharacterID = NEW.CharacterID;
+  end;
 
   
-CREATE TABLE EchoReferences
+create table EchoReferences
 (
-EchoID INTEGER NOT NULL,
-BookID INTEGER NOT NULL,
-Page INTEGER,
-FOREIGN KEY(EchoID) REFERENCES Echoes(EchoID),
-FOREIGN KEY(BookID) REFERENCES Books(BookID)
+EchoID integer not null,
+BookID integer not null,
+Page integer,
+foreign key(EchoID) references Echoes(EchoID),
+foreign key(BookID) references Books(BookID)
 );
 
 
-CREATE TRIGGER ini_grade_insert AFTER INSERT ON CharacterQualities
-  WHEN EXISTS (SELECT Description from Qualities where QualityID = NEW.QualityID
-                                                   and (Qualities.Name = 'Magician' or Qualities.Name = 'Adept' or Qualities.Name = 'Mystic Adept'))
- BEGIN
- INSERT INTO CharacterInitiation
+
+create trigger magic_insert after insert on CharacterQualities when NEW.Quality = 'Magician' or NEW.Quality = 'Adept' or NEW.Quality = 'Mystic Adept'
+ begin
+ insert into CharacterInitiation
  (CharacterID, InitiationGrade)
- VALUES
- (NEW.CharacterID, 0);
- END;
+ values
+ (NEW.CharacterID, 0); 
+ update CharacterAttributes
+ set Magic = 1 where CharacterID = NEW.CharacterID;
+ end;
  
 
-CREATE TRIGGER subm_grade_insert AFTER INSERT ON CharacterQualities
-WHEN EXISTS (SELECT Description from Qualities where QualityID = NEW.QualityID 
-                                                and (Qualities.Name = 'Technomancer'))
-BEGIN
-INSERT INTO CharacterSubmersion
-(CharacterID, SubmersionGrade)
-VALUES
-(NEW.CharacterID, 0);
-END;
+create trigger resonance_insert after insert on CharacterQualities 
+for each row when (NEW.Quality = 'Technomancer') 
+begin 
+ insert into CharacterSubmersion (CharacterID, SubmersionGrade) values (NEW.CharacterID, 0);
+ update CharacterAttributes set Resonance = 1 where CharacterID = NEW.CharacterID;
+end;
+
+ 
+create trigger mag_attr_remove after delete on characterqualities
+   when (OLD.Quality = 'Magician' or OLD.Quality = 'Adept' or OLD.Quality = 'Mystic Adept')
+   begin
+   update CharacterAttributes
+ set Magic = 0 where CharacterID = NEW.CharacterID;
+   delete from CharacterInitiation where CharacterInitiation.CharacterID = OLD.CharacterID;
+   end;
+   
+create trigger res_attr_remove after delete on characterqualities
+   when (OLD.Quality = 'Technomancer')
+   begin
+   update CharacterAttributes set Resonance = 0 where CharacterID = NEW.CharacterID;
+   delete from CharacterSubmersion where CharacterSubmersion.CharacterID = OLD.CharacterID;
+   end;

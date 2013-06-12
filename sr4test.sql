@@ -1,22 +1,82 @@
 insert into Characters
-    (CharacterID, CharacterName, CharacterMetatypeID, CharacterDescription, CharacterTotalBP, CharacterTotalKarma, CharacterCurrentKarma)
+(
+CharacterID,
+Name,
+Metatype,
+Description,
+TotalBP,
+TotalKarma,
+CurrentKarma,
+StreetCred,
+Notoriety 
+)
 values
-    (1, 'John Doe', 1, null, 400, 750, 1),
-    (2, 'Jane Doe', 2, null, 400, 750, 1),
-    (3, 'Janice Doe', 1, null, 400, 750, 1),
-    (4, 'Jolly Doe', 2, null, 400, 750, 1)
-;
-
-insert into CharacterConnections
-    (CharacterID, Name, Description, Rating, Influence)
-values
-    (1, 'Cameron', null, 4, 5),
-    (1, 'Alice', null, 1, 3),
-    (2, 'Bob', null, 3, 2)
-;
+(1, 'J. Random Runner', 'Elf', 'Just another random shadowrunner trying to make rent', 400, 0, 0, 0, 0);
 
 insert into CharacterAttributes
-    (CharacterID, BodyAttr, Agility, Strength, Intuition, Logic, Charisma, Willpower, Essence, Edge)
+(CharacterID,
+BodyAttr, -- "Body" doesn't seem to work...
+Agility,
+Strength,
+Reaction,
+Intuition,
+Logic,
+Charisma,
+Willpower,
+Essence,
+Edge  )
 values
-    (1, 2, 3, 4, 3, 3, 5, 4, 2, 2),
-	(3, 2, 3, 4, 3, 3, 6, 4, 2, 2);
+(1, 2, 2, 2, 2, 3, 3, 3, 3, 6, 1);
+
+insert into CharacterConnections
+(CharacterID,
+Name,
+Description,
+Rating,
+Influence  )
+values
+(1, 'Fred Foobar', 'J. Random Runner''s fixer', 3, 3),
+(1, 'J. Random Hacker', 'Hacker connection', 4, 2);
+
+insert into CharacterSkills
+(
+CharacterID ,  
+Skill, 
+Rating ,
+Grouped,
+Specialisation
+)
+values
+(1, 'Pistols', 3, 0,  null),
+(1, 'Automatics', 2, 0, null),
+(1, 'Perception', 4, 0, 'seeing'),
+(1, 'Dodge', 3, 0, null),
+(1, 'Infiltration', 3, 0, null),
+(1, 'Spellcasting', 4, 0, null),
+(1, 'Assensing', 4, 0, null)
+;
+
+insert into CharacterQualities
+(
+CharacterID,
+Quality,
+Description )
+values
+(1, 'Magician', null),
+(1, 'Addiction (Mild)', 'Alcohol'),
+(1, 'Scorched (5 BP)', null)
+;
+
+update CharacterAttributes set Magic = 5 where CharacterID = 1;
+
+insert into CharacterSpells
+(
+CharacterID, -- constraint for character having to have Magic? Probably not; a magician could burn out and lose their magic, too
+Spell  
+)
+values
+(1, 'Stunbolt'),
+(1, 'Clairvoyance'),
+(1, 'Heal');
+
+
