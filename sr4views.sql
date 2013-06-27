@@ -84,6 +84,7 @@ from CharacterSkills
 	inner join CharacterAttributes on CharacterSkills.CharacterID = CharacterAttributes.CharacterID
 	where not Skills.IsActive
 group by CharacterSkills.CharacterID;
+
 	
 		
 create view ViewTotalCost as select
@@ -97,6 +98,7 @@ create view ViewTotalCost as select
 --  	-- a negative BP cost here, which we obviously don't want.
  	+ coalesce(case when ViewKnowledgeSkillCost.BP < 0 then 0 else ViewKnowledgeSkillCost.BP end, 0) 
 	+ coalesce(ViewConnectionCost.BP, 0)
+	+ 3 * (select count(*) from CharacterSpells)
 	    as BP
 from Characters
     left outer join Metatypes on Characters.Metatype = Metatypes.Name
@@ -104,16 +106,14 @@ from Characters
     left outer join ViewAttributeCost on Characters.CharacterID = ViewAttributeCost.CharacterID
     left outer join ViewQualityCost on Characters.CharacterID = ViewQualityCost.CharacterID
     left outer join ViewActiveSkillCost on Characters.CharacterID = ViewActiveSkillCost.CharacterID
-    left outer join ViewKnowledgeSkillCost on Characters.CharacterID = ViewKnowledgeSkillCost.CharacterID;
+    left outer join ViewKnowledgeSkillCost on Characters.CharacterID = ViewKnowledgeSkillCost.CharacterID
+    left outer join CharacterSpells on Characters.CharacterID = CharacterSpells.CharacterID
+    left outer join CharacterComplexForms on Characters.CharacterID = CharacterComplexForms.CharacterID;
 
     
 create view ViewGearNuyenCost as select
    Characters.CharacterID,
-   case when CharacterGear.Rating is null then
-   sum(Gear.NuyenCost * CharacterGear.Quantity)   
-   else
-   sum(Gear.NuyenCost * CharacterGear.Rating * CharacterGear.Quantity)   
-   end
+   sum(Gear.NuyenCost * coalesce(CharacterGear.Rating, 1) * CharacterGear.Quantity)   
 from CharacterGear
   left outer join Characters on Characters.CharacterID = CharacterGear.CharacterID
   left outer join Gear on (CharacterGear.GearType = Gear.GearType and CharacterGear.GearName = Gear.GearName)

@@ -20,7 +20,8 @@ TotalBP integer,
 TotalKarma integer,
 CurrentKarma integer,
 StreetCred integer,
-Notoriety integer
+Notoriety integer,
+CreationComplete boolean
 );
 
 create table Metatypes
@@ -376,6 +377,19 @@ Spell text not null,
 foreign key (CharacterID) references Characters(CharacterID),
 foreign key (Spell) references Spells(Name)
 );
+
+create view CharacterSpellCount as select CharacterSkills.CharacterID as CharacterID, 2 * max(CharacterSkills.Rating) as MaxSpellCount 
+                                from CharacterSkills 
+                                where CharacterSkills.Skill = 'Spellcasting' or CharacterSkills.Skill = 'Ritual Spellcasting'
+                                group by CharacterID;
+
+create trigger chk_amount before insert on CharacterSpells
+when exists (select CreationComplete from Characters where CharacterID = NEW.CharacterID and coalesce(CreationComplete, 0) = 0) and exists (select MaxSpellCount from CharacterSpellCount where CharacterSpellCount.CharacterID = NEW.CharacterID and MaxSpellCount <= (select count(*) from CharacterSpells where CharacterID = NEW.CharacterID))
+begin -- error handling
+select raise(abort, 'Too many spells');
+end;
+
+
 
 create table SpellReferences
 (
