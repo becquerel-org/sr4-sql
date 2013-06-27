@@ -60,7 +60,8 @@ values
 (1, 'Ritual Spellcasting', 5, 0, null),
 (1, 'Assensing', 4, 0, null),
 
-(2, 'Spellcasting', 1, 0, null)
+(2, 'Spellcasting', 1, 0, null),
+(3, 'Compiling', 3, 0, null)
 ;
 
 insert into CharacterQualities
@@ -99,15 +100,11 @@ values
 (2, 'Clairvoyance'),
 (2, 'Mindlink');
 
-insert into CharacterComplexForms
-(CharacterID, ComplexForm, Rating)
+
+insert into CharacterSprites
+(CharacterID, SpriteID, SpriteType, Rating, Tasks)
 values
-(3, 'Attack', 2),
-(3, 'Analyze', 6),
-(3, 'Edit', 4),
-(3, 'Encrypt', 2),
-(3, 'Decrypt', 2),
-(3, 'Exploit', 4),
-(3, 'Command', 2),
-(3, 'Scan', 2);
+(3, 1, 'Code', 5, 2),
+--(3, 2, 'Code', 5, 1),
+(3, 3, 'Data', 5, 1);
 

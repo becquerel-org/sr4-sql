@@ -795,3 +795,20 @@ VALUES
 ('Heavy Crossbow', '7P', -1),
 ('Shuriken', 'STR/2 P', null),
 ('Throwing Knife', '(STR/2 + 1) P', null);
+
+insert into Programmes
+(Name, Description)
+values
+('Attack', ''),
+('Analyze', ''),
+('Medic', '');
+
+insert into Sprites
+(
+SpriteType, Description
+)
+values
+('Code', ''),
+('Courier', ''),
+('Data', '')
+; 

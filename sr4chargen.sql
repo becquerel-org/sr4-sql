@@ -300,6 +300,12 @@ Firewall integer not null,
 System integer not null
 );
 
+create table Programmes
+(
+Name text not null primary key,
+Description text
+);
+
 create table Electronics
 (
 Name text not null primary key,
@@ -383,9 +389,11 @@ create view CharacterSpellCount as select CharacterSkills.CharacterID as Charact
                                 where CharacterSkills.Skill = 'Spellcasting' or CharacterSkills.Skill = 'Ritual Spellcasting'
                                 group by CharacterID;
 
-create trigger chk_amount before insert on CharacterSpells
-when exists (select CreationComplete from Characters where CharacterID = NEW.CharacterID and coalesce(CreationComplete, 0) = 0) and exists (select MaxSpellCount from CharacterSpellCount where CharacterSpellCount.CharacterID = NEW.CharacterID and MaxSpellCount <= (select count(*) from CharacterSpells where CharacterID = NEW.CharacterID))
-begin -- error handling
+create trigger chk_spellcount before insert on CharacterSpells
+when exists (select CreationComplete from Characters where CharacterID = NEW.CharacterID and coalesce(CreationComplete, 0) = 0) 
+        and exists (select MaxSpellCount from CharacterSpellCount where CharacterSpellCount.CharacterID = NEW.CharacterID 
+                                                                         and MaxSpellCount <= (select count(*) from CharacterSpells where CharacterID = NEW.CharacterID))
+begin 
 select raise(abort, 'Too many spells');
 end;
 
@@ -448,14 +456,8 @@ foreign key (CharacterID) references Characters(CharacterID),
 foreign key (Metamagic) references Metamagic(Name)
 );
 
-
-
-
-create table ComplexForms
-(
-Name text not null primary key,
-Description text
-);
+-- Yes, this is the same table. I just want to rename this for convenience when implementing the TM stuff.
+create view ComplexForms as select Name, Description from Programmes;
 
 create table CharacterComplexForms
 (
@@ -463,7 +465,7 @@ CharacterID integer not null,
 ComplexForm text not null,
 Rating integer not null,
 foreign key (CharacterID) references Characters(CharacterID),
-foreign key (ComplexForm) references ComplexForms(ComplexForm)
+foreign key (ComplexForm) references ComplexForms(Name)
 );
 
 create view CharacterCFCount as select CharacterAttributes.CharacterID as CharacterID, 2 * CharacterAttributes.Logic as MaxCFCount 
@@ -548,7 +550,63 @@ foreign key(EchoID) references Echoes(EchoID),
 foreign key(BookID) references Books(BookID)
 );
 
+create table Sprites
+(
+SpriteType text not null primary key,
+Description text
+);
 
+create table SpriteComplexForms
+(
+SpriteType text not null,
+ComplexForm text not null,
+Optional boolean not null,
+foreign key(SpriteType) references Sprites(SpriteType),
+foreign key(ComplexForm) references ComplexForms(Name)
+);
+
+create table SpritePowers
+(
+SpriteType text not null,
+SpritePower text not null,
+Description text,
+foreign key(SpriteType) references Sprites(SpriteType),
+constraint pk_powers primary key (SpriteType, SpritePower)
+);
+
+-- designate optional complex forms for sprites
+create table CharacterSprites
+(
+CharacterID integer not null,
+SpriteID integer not null,
+SpriteType text not null,
+Rating integer not null,
+Tasks integer not null,
+Notes text,
+foreign key (CharacterID) references Characters(CharacterID),
+constraint pk_sprites primary key (CharacterID, SpriteID)
+);
+
+create view CharacterSpriteCount as select CharacterID, Charisma as MaxSpriteCount from CharacterAttributes;
+
+create view CharacterSpriteTasks as select CharacterID, Rating as MaxSpriteTasks from CharacterSkills where CharacterSkills.Skill = 'Compiling';
+
+
+create trigger chk_spritecount before insert on CharacterSprites
+when exists (select CreationComplete from Characters where CharacterID = NEW.CharacterID and coalesce(CreationComplete, 0) = 0) 
+     and (exists (select MaxSpriteCount from CharacterSpriteCount where CharacterSpriteCount.CharacterID = NEW.CharacterID and MaxSpriteCount <= (select count(*) from CharacterSprites where CharacterID = NEW.CharacterID))
+          or exists (select MaxSpriteTasks from CharacterSpriteTasks where CharacterSpriteTasks.CharacterID = NEW.CharacterID and MaxSpriteTasks < NEW.Tasks))
+begin -- error handling
+select raise(abort, 'Maximum amount or rating of sprites exceeded');
+end;
+  
+-- sprites that are registered during character generation have a rating equal to the character's Resonance
+create trigger sprite_rating after insert on CharacterSprites
+when exists (select CreationComplete from Characters where CharacterID = NEW.CharacterID and coalesce(CreationComplete, 0) = 0) 
+begin
+  update CharacterSprites set Rating = (select Resonance from CharacterAttributes where CharacterAttributes.CharacterID = NEW.CharacterID )
+         where CharacterID = NEW.CharacterID and SpriteID = NEW.SpriteID;
+end;
 
 create trigger magic_insert after insert on CharacterQualities when NEW.Quality = 'Magician' or NEW.Quality = 'Adept' or NEW.Quality = 'Mystic Adept'
  begin
