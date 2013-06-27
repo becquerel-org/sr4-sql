@@ -13,7 +13,8 @@ CreationComplete
 )
 values
 (1, 'J. Random Runner', 'Elf', 'Just another random shadowrunner trying to make rent', 400, 0, 0, 0, 0, 0),
-(2, 'H. Random Mage', 'Human', 'The other other wizard Harry', 400, 0, 0, 0, 0, 0);
+(2, 'H. Random Mage', 'Human', 'The other other wizard Harry', 400, 0, 0, 0, 0, 0),
+(3, 'Fred Foobar', 'Dwarf', 'Technomancer hacker', 400, 0, 0, 0, 0, 0);
 
 insert into CharacterAttributes
 (CharacterID,
@@ -28,7 +29,8 @@ Willpower,
 Essence,
 Edge  )
 values
-(1, 2, 2, 2, 2, 3, 3, 3, 3, 6, 1);
+(1, 2, 2, 2, 2, 3, 3, 3, 3, 6, 1),
+(3, 2, 2, 2, 2, 3, 4, 2, 3, 6, 0);
 
 insert into CharacterConnections
 (CharacterID,
@@ -69,12 +71,13 @@ Description )
 values
 (1, 'Magician', null),
 (1, 'Addiction (Mild)', 'Alcohol'),
-(1, 'Scorched (5 BP)', null)
+(1, 'Scorched (5 BP)', null),
+(3, 'Technomancer', null)
 ;
 
 update CharacterAttributes set Magic = 5 where CharacterID = 1;
 update Characters set CreationComplete = 1 where CharacterID = 2;
-
+update CharacterAttributes set Resonance = 4 where CharacterID = 3;
 insert into CharacterSpells
 (
 CharacterID, -- constraint for character having to have Magic? Probably not; a magician could burn out and lose their magic, too
@@ -96,4 +99,15 @@ values
 (2, 'Clairvoyance'),
 (2, 'Mindlink');
 
+insert into CharacterComplexForms
+(CharacterID, ComplexForm, Rating)
+values
+(3, 'Attack', 2),
+(3, 'Analyze', 6),
+(3, 'Edit', 4),
+(3, 'Encrypt', 2),
+(3, 'Decrypt', 2),
+(3, 'Exploit', 4),
+(3, 'Command', 2),
+(3, 'Scan', 2);
 

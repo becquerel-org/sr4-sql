@@ -466,6 +466,15 @@ foreign key (CharacterID) references Characters(CharacterID),
 foreign key (ComplexForm) references ComplexForms(ComplexForm)
 );
 
+create view CharacterCFCount as select CharacterAttributes.CharacterID as CharacterID, 2 * CharacterAttributes.Logic as MaxCFCount 
+                               from CharacterAttributes group by CharacterID;
+                                
+create trigger chk_cfcount before insert on CharacterComplexForms
+when exists (select CreationComplete from Characters where CharacterID = NEW.CharacterID and coalesce(CreationComplete, 0) = 0) 
+     and exists (select MaxCFCount from CharacterCFCount where CharacterCFCount.CharacterID = NEW.CharacterID and MaxCFCount <= (select count(*) from CharacterComplexForms where CharacterID = NEW.CharacterID))
+begin -- error handling
+select raise(abort, 'Too many complex forms');
+end;
 
 create table ComplexFormReferences
 (

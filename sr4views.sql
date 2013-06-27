@@ -85,7 +85,11 @@ from CharacterSkills
 	where not Skills.IsActive
 group by CharacterSkills.CharacterID;
 
-	
+create view ViewComplexFormCost as select
+     CharacterComplexForms.CharacterID,
+     sum(Rating) as BP
+from CharacterComplexForms
+group by CharacterComplexForms.CharacterID;
 		
 create view ViewTotalCost as select
     Characters.CharacterID,
@@ -99,6 +103,7 @@ create view ViewTotalCost as select
  	+ coalesce(case when ViewKnowledgeSkillCost.BP < 0 then 0 else ViewKnowledgeSkillCost.BP end, 0) 
 	+ coalesce(ViewConnectionCost.BP, 0)
 	+ 3 * (select count(*) from CharacterSpells)
+	+ ViewComplexFormCost.BP
 	    as BP
 from Characters
     left outer join Metatypes on Characters.Metatype = Metatypes.Name
@@ -108,7 +113,7 @@ from Characters
     left outer join ViewActiveSkillCost on Characters.CharacterID = ViewActiveSkillCost.CharacterID
     left outer join ViewKnowledgeSkillCost on Characters.CharacterID = ViewKnowledgeSkillCost.CharacterID
     left outer join CharacterSpells on Characters.CharacterID = CharacterSpells.CharacterID
-    left outer join CharacterComplexForms on Characters.CharacterID = CharacterComplexForms.CharacterID;
+    left outer join ViewComplexFormCost on Characters.CharacterID = ViewComplexFormCost.CharacterID;
 
     
 create view ViewGearNuyenCost as select
