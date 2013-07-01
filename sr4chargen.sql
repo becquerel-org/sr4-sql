@@ -189,6 +189,13 @@ foreign key(Quality) references Qualities(Name),
 foreign key(BookID) references Books(BookID)
 );
 
+create table CyberwareGrades
+(
+Grade text not null,
+EssenceMultiplier number not null,
+CostMultiplier number not null
+);
+
 create table Gear
 (
 GearType text not null,
@@ -303,7 +310,10 @@ System integer not null
 create table Programmes
 (
 Name text not null primary key,
-Description text
+ProgType text not null,
+Skill text,
+Description text,
+foreign key (Skill) references Skills(Name)
 );
 
 create table Electronics
@@ -331,14 +341,34 @@ create table Cyberware
 (
 Name text not null primary key,
 Essence number,
-CapacityRating number
+CapacityRating number,
 );
+
 -- insert half a billion gear tables here
 create table Bioware
 (
 Name text not null primary key,
 Essence number
 );
+
+create table CharacterCyberware
+(
+CharacterID integer not null,
+Name text not null,
+Grade text not null,
+constraint pk_char_cw primary key (CharacterID, Name),
+foreign key CharacterID references Characters(CharacterID),
+foreign key Name references Cyberware(Name),
+foreign key Grade references CyberwareGrades(Grade)
+);
+
+create trigger after insert on CharacterGear
+when NEW.GearType = 'Cyberware' 
+begin
+insert into CharacterCyberware
+(CharacterID, Name, Grade)
+values
+(NEW.CharacterID, NEW.Name, 'Standard');
 
 create table Vehicle
 (
@@ -361,6 +391,8 @@ Rating integer,
 foreign key (VehicleName) references Vehicle(Name)
 );
 
+
+
 create table Spells
 (
 Name text not null primary key,
@@ -375,6 +407,8 @@ SpellDescriptors text,
 Description text
 -- stuff
 );
+
+
 
 create table CharacterSpells
 (
@@ -457,7 +491,7 @@ foreign key (Metamagic) references Metamagic(Name)
 );
 
 -- Yes, this is the same table. I just want to rename this for convenience when implementing the TM stuff.
-create view ComplexForms as select Name, Description from Programmes;
+create view ComplexForms as select Name, ProgType, Skill, Description from Programmes;
 
 create table CharacterComplexForms
 (

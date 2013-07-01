@@ -796,12 +796,29 @@ VALUES
 ('Shuriken', 'STR/2 P', null),
 ('Throwing Knife', '(STR/2 + 1) P', null);
 
+insert into CyberwareGrades
+(Grade, EssenceMultiplier, CostMultiplier)
+values
+('Standard', 1.0, 1.0),
+('Alphaware', 0.8, 2.0),
+('Betaware', 0.7, 4.0),
+('Deltaware', 0.5, 10.0)
+;
+
 insert into Programmes
 (Name, Description)
 values
-('Attack', ''),
-('Analyze', ''),
-('Medic', '');
+
+('Analyze', 'Common Use', 'Computer', 'Gather data about icons and nodes in the Matrix. Used for Matrix Perception. Can help detect hacking attempts if running in a node.'),
+('Browse', 'Common Use', 'Data Search', 'Track down information on a particular node or in the Matrix at large. Use for Data Search actions'),
+('Command', 'Common Use', null, 'Gives the user a modular and customizable control interface for various devices; used to control a device through the Matrix'),
+('Edit', 'Common Use', 'Computer', 'Create and alter files of any media type; use with the Edit action'),
+('Encrypt', 'Common Use', 'Electronic Warfare', 'Secure files, nodes and communications by using various cryptographic schemes and ciphers'),
+('Reality Filter', 'Common Use', 'Response', 'Translates a node''s VR sculpting into a metaphor of the user''s choice'),
+('Scan', 'Common Use', 'Electronic Warfare', 'Allows the user to locate wireless networks; use for the Detect Hidden Node action'),
+('Medic', ''),
+
+('Attack', '');
 
 insert into Sprites
 (

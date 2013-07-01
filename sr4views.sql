@@ -132,3 +132,8 @@ from CharacterGear
   left outer join Gear on (CharacterGear.GearType = Gear.GearType and CharacterGear.GearName = Gear.GearName)
   group by Characters.CharacterID;
   
+create view ViewEssenceCost as select
+   Characters.CharacterID,
+   sum(Essence * EssenceModifier) 
+from CharacterCyberware inner join CyberwareGrades on CharacterCyberware.Grade = CyberwareGrades.Grade
+group by CharacterID;
