@@ -1,6 +1,5 @@
     create table Book
-(BookID integer not null primary key,
-Title text);
+(Title text not null primary key);
 
 create table Messages
 (
@@ -155,10 +154,10 @@ foreign key(Skill) references Skills(Name)
 create table SkillReferences
 (
 Skill text not null,
-BookID integer not null,
+Title text not null,
 Page integer,
 foreign key(Skill) references Skills(Name),
-foreign key(BookID) references Books(BookID)
+foreign key(Title) references Books(Title)
 );
 
 create table Qualities
@@ -183,10 +182,10 @@ foreign key (Quality) references Qualities(Name)
 create table QualityReferences
 (
 Quality text not null,
-BookID integer not null,
+Title text not null,
 Page integer,
 foreign key(Quality) references Qualities(Name),
-foreign key(BookID) references Books(BookID)
+foreign key(Title) references Books(Title)
 );
 
 create table CyberwareGrades
@@ -232,11 +231,14 @@ end;
 
 create table GearReferences
 (
-GearID integer not null,
-BookID integer not null,
+GearType integer not null,
+GearName integer not null,
+Title text not null,
 Page integer,
-foreign key(GearID) references Gear(GearID),
-foreign key(BookID) references Books(BookID)
+constraint pk_gear primary key (GearType, GearName),
+foreign key (GearType) references Gear(GearType),
+foreign key (GearName) references Gear(GearName)
+foreign key(Title) references Books(Title)
 );
 
 create table MeleeWeapons
@@ -436,10 +438,10 @@ end;
 create table SpellReferences
 (
 Spell text not null,
-BookID integer, -- if ID is null, assume user-generated content
+Title text, -- if ID is null, assume user-generated content
 Page integer,
 foreign key(Spell) references Spells(Name),
-foreign key(BookID) references Books(BookID)
+foreign key(Title) references Books(Title)
 );
 
 create table Powers
@@ -515,10 +517,10 @@ end;
 create table ComplexFormReferences
 (
 ComplexFormID integer not null,
-BookID integer,
+Title text,
 Page integer,
 foreign key(ComplexFormID) references ComplexForms(ComplexFormID),
-foreign key(BookID) references Books(BookID)
+foreign key(Title) references Books(Title)
 );
 
 create table CharacterSubmersion
@@ -533,13 +535,13 @@ create table Echoes
 (
 Name text not null primary key,
 Multiple boolean not null, -- can this echo be taken multiple times?
+MaxAmount integer, -- need trigger to check this
 Description text
 );
 
 create table EchoPrerequisites
 (
-id integer not null primary key,
-Echo text not null,
+Echo text not null primary key,
 Prerequisite text not null,
 foreign key (Echo) references Echoes(Name),
 foreign key (Prerequisite) references Echoes(Name)
@@ -561,7 +563,8 @@ create trigger chk_submersion_insert after insert on CharacterEchoes
   when (not exists (select SubmersionGrade from CharacterSubmersion where CharacterSubmersion.CharacterID = NEW.CharacterID 
                                             and SubmersionGrade >= (select SUM(Taken) from CharacterEchoes where CharacterID = NEW.CharacterID))
         or (NEW.Taken > 1 and exists (select Multiple from Echoes where Name = NEW.Name and Multiple = 0))
-        or ((exists (select Prerequisite from EchoPrerequisites where Echo = NEW.Name)) and (not exists (select Echo from CharacterEchoes left outer join EchoPrerequisites on EchoPrerequisites.Echo = NEW.Name where CharacterEchoes.Echo = EchoPrerequisites.Prerequisite))))
+        or ((exists (select Prerequisite from EchoPrerequisites where Echo = NEW.Name)) and (not exists (select Echo from CharacterEchoes left outer join EchoPrerequisites on EchoPrerequisites.Echo = NEW.Name where CharacterEchoes.Echo = EchoPrerequisites.Prerequisite)))
+        or (exists (select Multiple from Echoes where Name = NEW.Name and Multiple = 1 and MaxAmount < NEW.Taken))
   begin
   delete from CharacterEchoes where CharacterID = NEW.CharacterID;
   end;
@@ -569,7 +572,8 @@ create trigger chk_submersion_insert after insert on CharacterEchoes
 create trigger chk_submersion_update after update on CharacterEchoes
   when (not exists (select SubmersionGrade from CharacterSubmersion where CharacterSubmersion.CharacterID = NEW.CharacterID and SubmersionGrade >= (select SUM(Taken) from CharacterEchoes where CharacterID = NEW.CharacterID))
         or (NEW.Taken > 1 and exists (select Multiple from Echoes where EchoID = NEW.EchoID and Multiple = 0))
-        or ((exists (select Prerequisite from EchoPrerequisites where Echo = NEW.Name)) and (not exists (select Echo from CharacterEchoes left outer join EchoPrerequisites on EchoPrerequisites.Echo = NEW.Name where CharacterEchoes.Echo = EchoPrerequisites.Prerequisite))))
+        or ((exists (select Prerequisite from EchoPrerequisites where Echo = NEW.Name)) and (not exists (select Echo from CharacterEchoes left outer join EchoPrerequisites on EchoPrerequisites.Echo = NEW.Name where CharacterEchoes.Echo = EchoPrerequisites.Prerequisite)))
+        or (exists (select Multiple from Echoes where Name = NEW.Name and Multiple = 1 and MaxAmount < NEW.Taken))
   begin
   delete from CharacterEchoes where CharacterID = NEW.CharacterID;
   end;
@@ -577,17 +581,32 @@ create trigger chk_submersion_update after update on CharacterEchoes
   
 create table EchoReferences
 (
-EchoID integer not null,
-BookID integer not null,
+Echo text not null,
+Title text not null,
 Page integer,
-foreign key(EchoID) references Echoes(EchoID),
-foreign key(BookID) references Books(BookID)
+foreign key(Echo) references Echoes(Name),
+foreign key(Title) references Books(Title)
 );
 
 create table Sprites
 (
 SpriteType text not null primary key,
+PilotModifier integer not null,
+ResponseModifier integer not null,
+FirewallModifier integer not null,
+MatrixInitModifier integer not null,
+IP integer not null,
+EdgeModifier integer not null,
 Description text
+);
+
+create table SpriteSkills
+(
+SpriteType text not null,
+Skill text not null,
+foreign key (SpriteType) references Sprites(SpriteType),
+foreign key (Skill) references Skills(Name),
+constraint pk_sprite_skills primary key (SpriteType, Skill)
 );
 
 create table SpriteComplexForms
@@ -595,6 +614,7 @@ create table SpriteComplexForms
 SpriteType text not null,
 ComplexForm text not null,
 Optional boolean not null,
+constraint pk_sprite_cf primary key (SpriteType, ComplexForm)
 foreign key(SpriteType) references Sprites(SpriteType),
 foreign key(ComplexForm) references ComplexForms(Name)
 );

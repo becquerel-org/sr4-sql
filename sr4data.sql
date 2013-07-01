@@ -1,3 +1,10 @@
+insert into Books
+(Title)
+values
+('20th Anniversary Core Rulebook')
+;
+
+
 insert into Metatypes
     (Name, BaseBody, BaseAgility, BaseReaction, BaseStrength, BaseCharisma, BaseIntuition, BaseLogic, BaseWillpower, BaseEdge, MaxBody, MaxAgility, MaxReaction, MaxStrength, MaxCharisma, MaxIntuition, MaxLogic, MaxWillpower, MaxEdge, BPCost)
 values
@@ -806,26 +813,189 @@ values
 ;
 
 insert into Programmes
-(Name, Description)
+(Name, ProgType, Skill, Description)
 values
-
+-- Common Use programs
 ('Analyze', 'Common Use', 'Computer', 'Gather data about icons and nodes in the Matrix. Used for Matrix Perception. Can help detect hacking attempts if running in a node.'),
 ('Browse', 'Common Use', 'Data Search', 'Track down information on a particular node or in the Matrix at large. Use for Data Search actions'),
 ('Command', 'Common Use', null, 'Gives the user a modular and customizable control interface for various devices; used to control a device through the Matrix'),
-('Edit', 'Common Use', 'Computer', 'Create and alter files of any media type; use with the Edit action'),
-('Encrypt', 'Common Use', 'Electronic Warfare', 'Secure files, nodes and communications by using various cryptographic schemes and ciphers'),
+('Edit', 'Common Use', 'Computer', 'Creates and alters files of any media type; use with the Edit action'),
+('Encrypt', 'Common Use', 'Electronic Warfare', 'Secures files, nodes and communications by using various cryptographic schemes and ciphers'),
 ('Reality Filter', 'Common Use', 'Response', 'Translates a node''s VR sculpting into a metaphor of the user''s choice'),
 ('Scan', 'Common Use', 'Electronic Warfare', 'Allows the user to locate wireless networks; use for the Detect Hidden Node action'),
-('Medic', ''),
-
-('Attack', '');
+-- Hacking programs
+('Armor', 'Hacking', null, 'Protects icons from attacks that cause Matrix damage'),
+('Attack', 'Hacking', null, 'Used to crash another icon or program. Use with Cybercombat or Hacking skill'),
+('Biofeedback Filter', 'Hacking', null, 'Monitors simsense signals and filters harmful feedback'),
+('Black Hammer', 'Hacking', 'Cybercombat', 'Black IC program that injects dangerous biofeedback responses into the target''s simsense interface'),
+('Blackout', 'Hacking', 'Cybercombat', 'Black IC program that is a nonlethal version of Black Hammer'),
+('Data Bomb', 'Hacking', null, 'Creates a data bomb in a file or node that attempts to crash an icon trying to access the file or node without authorization'),
+('Decrypt', 'Hacking', 'Electronic Warfare', 'Breaks into an encrypted system or service'),
+('Defuse', 'Hacking', 'Hacking', 'Deactivates data bombs'),
+('ECCM', 'Hacking', null, 'Filters out jamming signals that attempt to disrupt a wireless connection'), 
+('Exploit', 'Hacking', 'Hacking', 'Takes advantage of security weaknesses so a hacker can get unauthorized access to a node or program'),
+('Medic', 'Hacking', 'Computer', 'Repairs Matrix damage inflicted on icons'),
+('Sniffer', 'Hacking', null, 'Gathers data traffic and wireless signals and captures the information. Use with Electronic Warfare or Hacking skill'),
+('Spoof', 'Hacking', 'Hacking', 'Generates false access IDs and forges misleading data packets to confuse Track programs'),
+('Stealth', 'Hacking', 'Hacking', 'Attempts to hide the hacker from other system processes'),
+-- Autosofts
+('Track', 'Hacking', 'Computer', 'Analyzes a user''s connection and follows the datatrail back to the originating node'),
+('Clearsight', 'Autosoft', 'Improve the Pilot''s cognitive abilities, allowing it to better analyze and judge sensory input'),
+('Defense', 'Autosoft', 'Enables the drone to identify, guard against and dodge physical attacks'),
+('Electronic Warfare', 'Autosoft', 'Provides the drone with an in-depth knowledge of radio communications and the use of electronic warfare against them'),
+('Maneuver (Ground vehicle)', 'Autosoft', 'Helps a pilot maneuver ground vehicles'),
+('Maneuver (Anthroform)', 'Autosoft', 'Helps a pilot maneuver anthroform vehicles'),
+('Maneuver (Aircraft)', 'Autosoft', 'Helps a pilot maneuver aircraft within the atmosphere'),
+('Maneuver (Aerospace)', 'Autosoft', 'Helps a pilot maneuver aircraft outside the atmosphere'),
+('Maneuver (Watercraft)', 'Autosoft', 'Helps a pilot maneuver watercraft'),
+('Targeting (Archery)', 'Autosoft', 'Mimics the Archery attack skill'),
+('Targeting (Automatics)', 'Autosoft', 'Mimics the Automatics attack skill'),
+('Targeting (Blades)', 'Autosoft', 'Mimics the Blades attack skill'),
+('Targeting (Clubs)', 'Autosoft', 'Mimics the Clubs attack skill'),
+('Targeting (Heavy Weapons)', 'Autosoft', 'Mimics the Heavy Weapons attack skill'),
+('Targeting (Longarms)', 'Autosoft', 'Mimics the Longarms attack skill'),
+('Targeting (Pistols)', 'Autosoft', 'Mimics the Pistols attack skill'),
+('Targeting (Throwing Weapons)', 'Autosoft', 'Mimics the Throwing Weapons attack skill'),
+('Targeting (Unarmed Combat)', 'Autosoft', 'Mimics the Unarmed Combat attack skill'),
+-- Linguasofts
+('English', 'Linguasoft', ''),
+('Spanish', 'Linguasoft', ''),
+('French', 'Linguasoft', ''),
+('Japanese', 'Linguasoft', ''),
+('Cantonese', 'Linguasoft', ''),
+('Mandarin', 'Linguasoft', ''),
+('German', 'Linguasoft', ''),
+('Arabic', 'Linguasoft', ''),
+('Turkish', 'Linguasoft', ''),
+('Or''zet', 'Linguasoft', ''),
+('Sperethiel', 'Linguasoft', '');
 
 insert into Sprites
 (
-SpriteType, Description
+SpriteType, 
+PilotModifier,
+ResponseModifier,
+FirewallModifier,
+MatrixInitModifier,
+IP,
+EdgeModifier,
+Description
 )
 values
-('Code', ''),
-('Courier', ''),
-('Data', '')
-; 
+('Courier', 0, 1, 1, 3, 3, 0, 'Messengers and trackers, good for securely conveying important data through the matrix'),
+('Crack', 0, 1, 0, 3, 3, 0, 'Masters at finding programming flaws and exploits'),
+('Data', 0, 0, -2, 2, 3, 0, 'Excel at finding and manipulating information'),
+('Fault', 0, 2, 1, 3, 0, 'Designed to inject code errors and cause programs to fail'),
+('Machine', 0, 0, 2, 2, 3, 0, 'Adept at manipulating devices');
+
+
+insert into SpriteSkills
+(SpriteType, Skill)
+values
+('Courier', 'Computer'),
+('Courier', 'Data Search'),
+('Courier', 'Hacking'),
+('Crack', 'Computer'),
+('Crack', 'Electronic Warfare'),
+('Crack', 'Hacking'),
+('Data', 'Computer'),
+('Data', 'Data Search'),
+('Data', 'Electronic Warfare'),
+('Fault', 'Computer'),
+('Fault', 'Cybercombat'),
+('Fault', 'Hacking'),
+('Machine', 'Computer'),
+('Machine', 'Electronic Warfare'),
+('Machine', 'Hardware');
+
+insert into SpriteComplexForms
+(SpriteType,
+ComplexForm
+Optional
+)
+values
+('Courier', 'Analyze', 0),
+('Courier', 'Edit', 0),
+('Courier', 'Encrypt', 0),
+('Courier', 'Stealth', 0),
+('Courier', 'Track', 0),
+('Courier', 'Browse', 1),
+('Courier', 'Command', 1),
+('Courier', 'Decrypt', 1),
+('Courier', 'Exploit', 1),
+('Courier', 'Scan', 1),
+('Crack', 'Analyze', 0),
+('Crack', 'Exploit', 0),
+('Crack', 'Stealth', 0),
+('Crack', 'Decrypt', 1),
+('Crack', 'Defuse', 1),
+('Crack', 'Edit', 1),
+('Crack', 'Scan', 1),
+('Crack', 'Spoof', 1),
+('Data', 'Analyze', 0),
+('Data', 'Browse', 0),
+('Data', 'Edit', 0),
+('Data', 'Decrypt', 0),
+('Data', 'Defuse', 1),
+('Data', 'Encrypt', 1),
+('Data', 'Sniffer', 1),
+('Data', 'Stealth', 1),
+-- ('Data', 'any linguasoft', 1),
+('Fault', 'Analyze', 0),
+('Fault', 'Armor', 0),
+('Fault', 'Attack', 0),
+('Fault', 'Stealth', 0),
+('Fault', 'Black Hammer', 1),
+('Fault', 'Blackout', 1),
+('Fault', 'Exploit', 1),
+('Fault', 'Medic', 1),
+('Machine', 'Analyze', 0),
+('Machine', 'Command', 0),
+('Machine', 'Decrypt', 1),
+('Machine', 'Edit', 1),
+('Machine', 'Medic', 1)
+-- ,('Machine', 'any autosoft', 1)
+;
+
+insert into SpritePowers
+(SpriteType text not null,
+SpritePower text not null,
+Description text
+)
+values
+('Courier', 'Cookie', 'Tag a target icon with a hidden piece of code that can be used to track the icon''s Matrix activities'),
+('Courier', 'Hash', 'Temporarily encrypt a file with a unique Resonance algorithm such that only the sprite can decrypt it'),
+('Crack', 'Suppression', 'Confuse firewalls that detect the sprite engaging in illegitimate activity'),
+('Data', 'Steganography', 'Conceal a file or piece of data within another file'),
+('Data', 'Watermark', 'Tag an icon or node with an invisible marking that only Resonance-driven entities can see; secretly leave messages or otherwise mark Matrix object'),
+('Fault', 'Electron Storm', 'Engulfs a target icon in a sustained barrage of corrupting signals'),
+('Machine', 'Diagnostics', 'Evaluates the inner workings of an electronic device'),
+('Machine', 'Gremlins', 'Causes a device to mysteriously malfunction'),
+('Machine', 'Stability', 'Prevents normal malfunctions or accidents from afflicting the target');
+
+insert into Echoes
+(
+Name,
+Multiple,
+MaxAmount,
+Description
+)
+values
+('Firewall Upgrade', 1, 3, 'Firewall rating of living persona increases by 1'),
+('NeuroFilter', 1, 3, 'Biofeedback Filter rating of living persona increases by 1'),
+('Overclocking', 0, null, 'Accelerate living persona''s system clock, granting the technomancer +1 to Response and an additional Initiative Pass in full-sim VR'),
+('Resonance Link', 0, null, 'Establishes a low-level, one-way empathic link with another technomancer of the character''s choice'),
+('System Upgrade', 1, 3, 'System rating of living persona increases by 1');
+
+insert into EchoReferences
+(
+Echo,
+Title,
+Page
+)
+values
+('Firewall Upgrade', '20th Anniversary Core Rulebook', 243),
+('NeuroFilter', '20th Anniversary Core Rulebook', 243),
+('Overclocking', '20th Anniversary Core Rulebook', 244),
+('Resonance Link', '20th Anniversary Core Rulebook', 244),
+('System Upgrade', '20th Anniversary Core Rulebook', 244);
