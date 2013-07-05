@@ -127,15 +127,15 @@ insert into Skills
     values
     --  Combat 
     ('Archery', null, 1, 1, 'Agility', 'Use of muscle-powered projectile weapons'),
-    ('Automatics', 7, 1, 1, 'Agility', 'Use of personal firearms capable of autofire, larger than a pistol, but typically with a shorter barrel than a longarm'),
-    ('Blades', 3, 1, 1, 'Agility', 'Use of hand-held melee weapons with a sharpened edge or point'),
-    ('Clubs', 3, 1, 1, 'Agility', 'Use of hand-held melee weapons that have no edge or blade'),
+    ('Automatics', 'Firearms', 1, 1, 'Agility', 'Use of personal firearms capable of autofire, larger than a pistol, but typically with a shorter barrel than a longarm'),
+    ('Blades', null, 1, 1, 'Agility', 'Use of hand-held melee weapons with a sharpened edge or point'),
+    ('Clubs', null, 1, 1, 'Agility', 'Use of hand-held melee weapons that have no edge or blade'),
     ('Dodge', null, 1, 1, 'Reaction', 'Ability to move out of the way of a perceived attack or other incoming threat'),
     ('Exotic Melee Weapon', null, 1, 1, 'Agility', 'Must be taken separately for each different weapon you wish to be able to use'), -- Front end should take care of that; actually, create a new skill for each
     ('Exotic Ranged Weapon', null, 1, 1, 'Agility', 'Must be taken separately for each different weapon you wish to be able to use'),
     ('Heavy Weapons', null, 1, 1, 'Agility', 'Use of ranged projectile and launch weapons larger than an assault rifle'),
-    ('Longarms', 7, 1, 1, 'Agility', 'Use of all personal firearms with extended barrels'),
-    ('Pistols', 7, 1, 1, 'Agility', 'Use of all types of hand-held firearms'),
+    ('Longarms', 'Firearms', 1, 1, 'Agility', 'Use of all personal firearms with extended barrels'),
+    ('Pistols', 'Firearms', 1, 1, 'Agility', 'Use of all types of hand-held firearms'),
     ('Throwing Weapons', null, 1, 1, 'Agility', 'Use of any item thrown by the user'),
     ('Unarmed Combat', null, 1, 1, 'Agility', 'Use of combat techniques based solely on the use of own body parts'),
     --  Magical Active

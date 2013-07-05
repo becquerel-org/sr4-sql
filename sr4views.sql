@@ -82,9 +82,7 @@ create view CharacterKnowledgeSkillSpecialisationCost as select
        
 create view ViewActiveSkillCost as select
     CharacterSkills.CharacterID,
-	case when CharacterSkills.Grouped then sum(Rating * 10) 
-		 else sum(Rating) * 4 
-	end	
+	sum(Rating) * 4 
 	+ CharacterActiveSkillSpecialisationCost.BP
 	 as BP
 from CharacterSkills 
@@ -92,6 +90,11 @@ from CharacterSkills
 	inner join CharacterActiveSkillSpecialisationCost on CharacterActiveSkillSpecialisationCost.CharacterID = CharacterSkills.CharacterID --- wow, this seems really backwards, is there a better way?
 	where Skills.IsActive
 group by CharacterSkills.CharacterID;
+
+create view ViewSkillGroupCost as select
+     CharacterSkillGroups.CharacterID,
+     10 * sum(Rating) as BP     
+from CharacterSkillGroups group by CharacterID;
 
 create view ViewKnowledgeSkillCost as select
 	CharacterSkills.CharacterID as CharacterID,
@@ -133,6 +136,7 @@ create view ViewTotalCost as select
     + coalesce(ViewAttributeCost.BP, 0)
 	+ coalesce(ViewQualityCost.BP, 0)
  	+ coalesce(ViewActiveSkillCost.BP, 0)
+ 	+ coalesce(ViewSkillGroupCost.BP, 0)
  	-- I do this here because it'd be clumsy in the view itself, and probably run the aggregate function twice.
  	-- If the character does not spend all their free knowledge skill points at creation, they could end up with
 --  	-- a negative BP cost here, which we obviously don't want.
@@ -148,6 +152,7 @@ from Characters
     left outer join ViewAttributeCost on Characters.CharacterID = ViewAttributeCost.CharacterID
     left outer join ViewQualityCost on Characters.CharacterID = ViewQualityCost.CharacterID
     left outer join ViewActiveSkillCost on Characters.CharacterID = ViewActiveSkillCost.CharacterID
+    left outer join ViewSkillGroupCost on Characters.CharacterID = ViewSkillGroupCost.CharacterID
     left outer join ViewKnowledgeSkillCost on Characters.CharacterID = ViewKnowledgeSkillCost.CharacterID
    -- left outer join CharacterActiveSkillSpecialisationCost on Characters.CharacterID = CharacterActiveSkillSpecialisationCost.CharacterID
     left outer join CharacterSpells on Characters.CharacterID = CharacterSpells.CharacterID

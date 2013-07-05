@@ -146,15 +146,31 @@ create table CharacterSkills
 CharacterID  integer not null,  
 Skill text not null, 
 Rating  integer not null,
-Grouped boolean not null,
 Specialisation text,
 constraint pk_cskills primary key (CharacterID, Skill),
 foreign key(CharacterID) references Characters(CharacterID),
 foreign key(Skill) references Skills(Name)
 );
 
+-- if a character has a skill group you insert it here, NOT in the Skills table
+create table CharacterSkillGroups
+(
+CharacterID integer not null,
+SkillGroup text not null,
+Rating integer not null,
+constraint pk_cskillgroups primary key (CharacterID, SkillGroup),
+foreign key(CharacterID) references Characters(CharacterID),
+foreign key(SkillGroup) references SkillGroups(Name)
+);
 
-
+-- this view is what you want to use for display, it displays grouped skills correctly
+create view ViewCharacterSkills as select
+CharacterID, Name as Skill, Rating 
+ from CharacterSkillGroups
+      inner join Skills on Skills.SkillGroup = CharacterSkillGroups.SkillGroup 
+ union
+ select CharacterID, Skill, Rating from CharacterSkills;
+      
 
 
 create table SkillReferences

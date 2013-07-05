@@ -47,24 +47,28 @@ insert into CharacterSkills
 CharacterID ,  
 Skill, 
 Rating ,
-Grouped,
 Specialisation
 )
 values
-(1, 'Pistols', 3, 0,  'Heavy Pistols'),
-(1, 'Automatics', 2, 0, null),
-(1, 'Perception', 4, 0, 'seeing'),
-(1, 'Dodge', 3, 0, null),
-(1, 'Infiltration', 3, 0, null),
-(1, 'Spellcasting', 4, 0, null),
-(1, 'Ritual Spellcasting', 5, 0, null),
-(1, 'Assensing', 4, 0, null),
+(1, 'Pistols', 3, 'Heavy Pistols'),
+(1, 'Automatics', 2,  null),
+(1, 'Perception', 4,  'seeing'),
+(1, 'Dodge', 3,  null),
+(1, 'Infiltration', 3,  null),
+(1, 'Spellcasting', 4,  null),
+(1, 'Ritual Spellcasting', 5, null),
+(1, 'Assensing', 4, null),
 
-(2, 'Spellcasting', 1, 0, null),
-(3, 'Compiling', 3, 0, null),
-(3, 'Running', 2, 0, 'long-distance'),
-(1, 'Criminal Organizations', 3, 0, 'Yakuza')
+(2, 'Spellcasting', 1, null),
+(3, 'Running', 2,  'long-distance'),
+(1, 'Criminal Organizations', 3,  'Yakuza')
 ;
+
+insert into CharacterSkillGroups
+(CharacterID, SkillGroup, Rating)
+values
+(2, 'Influence', 3),
+(3, 'Tasking', 3);
 
 insert into CharacterQualities
 (
