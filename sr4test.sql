@@ -51,7 +51,7 @@ Grouped,
 Specialisation
 )
 values
-(1, 'Pistols', 3, 0,  null),
+(1, 'Pistols', 3, 0,  'Heavy Pistols'),
 (1, 'Automatics', 2, 0, null),
 (1, 'Perception', 4, 0, 'seeing'),
 (1, 'Dodge', 3, 0, null),
@@ -61,7 +61,9 @@ values
 (1, 'Assensing', 4, 0, null),
 
 (2, 'Spellcasting', 1, 0, null),
-(3, 'Compiling', 3, 0, null)
+(3, 'Compiling', 3, 0, null),
+(3, 'Running', 2, 0, 'long-distance'),
+(1, 'Criminal Organizations', 3, 0, 'Yakuza')
 ;
 
 insert into CharacterQualities

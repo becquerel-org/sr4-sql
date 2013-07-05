@@ -61,27 +61,49 @@ from CharacterQualities
 	inner join Qualities on CharacterQualities.Quality = Qualities.Name
 group by CharacterID;
 
+create view CharacterActiveSkillSpecialisationCost as select 
+       CharacterID,
+       Skill,
+       2 * count(*) as BP
+       from CharacterSkills
+       where CharacterSkills.Specialisation is not null 
+          and exists (select Name from Skills where CharacterSkills.Skill = Skills.Name and Skills.IsActive)
+       group by CharacterID;
+
+create view CharacterKnowledgeSkillSpecialisationCost as select 
+       CharacterID,
+       Skill,
+       count(*) as SpecCount
+       from CharacterSkills
+       where CharacterSkills.Specialisation is not null 
+          and exists (select Name from Skills where CharacterSkills.Skill = Skills.Name and not Skills.IsActive)
+       group by CharacterID;
+       
 create view ViewActiveSkillCost as select
     CharacterSkills.CharacterID,
 	case when CharacterSkills.Grouped then sum(Rating * 10) 
 		 else sum(Rating) * 4 
 	end	
+	+ CharacterActiveSkillSpecialisationCost.BP
 	 as BP
 from CharacterSkills 
 	inner join Skills on CharacterSkills.Skill = Skills.Name
+	inner join CharacterActiveSkillSpecialisationCost on CharacterActiveSkillSpecialisationCost.CharacterID = CharacterSkills.CharacterID --- wow, this seems really backwards, is there a better way?
 	where Skills.IsActive
-group by CharacterID;
+group by CharacterSkills.CharacterID;
 
 create view ViewKnowledgeSkillCost as select
 	CharacterSkills.CharacterID,
- 	(sum(Rating) * 2 
- 	  + 
- 	 case when CharacterSkills.Specialisation is null then 0 else 1 end) 
- 	 - (6 * (CharacterAttributes.Logic + CharacterAttributes.Intuition)) 
-	 as BP
+ 	(2 * sum(Rating) 
+ 	 + 2 * CharacterKnowledgeSkillSpecialisationCost.SpecCount
+ 	 - (6 * (CharacterAttributes.Logic + CharacterAttributes.Intuition)))
+	 as BP,
+	 sum(Rating) as sumRating,
+	 CharacterKnowledgeSkillSpecialisationCost.SpecCount as SpecCount
 from CharacterSkills
 	inner join Skills on CharacterSkills.Skill = Skills.Name
 	inner join CharacterAttributes on CharacterSkills.CharacterID = CharacterAttributes.CharacterID
+	inner join CharacterKnowledgeSkillSpecialisationCost on CharacterSkills.CharacterID = CharacterKnowledgeSkillSpecialisationCost.CharacterID
 	where not Skills.IsActive
 group by CharacterSkills.CharacterID;
 
@@ -118,6 +140,7 @@ from Characters
     left outer join ViewQualityCost on Characters.CharacterID = ViewQualityCost.CharacterID
     left outer join ViewActiveSkillCost on Characters.CharacterID = ViewActiveSkillCost.CharacterID
     left outer join ViewKnowledgeSkillCost on Characters.CharacterID = ViewKnowledgeSkillCost.CharacterID
+   -- left outer join CharacterActiveSkillSpecialisationCost on Characters.CharacterID = CharacterActiveSkillSpecialisationCost.CharacterID
     left outer join CharacterSpells on Characters.CharacterID = CharacterSpells.CharacterID
     left outer join ViewComplexFormCost on Characters.CharacterID = ViewComplexFormCost.CharacterID
     -- left outer join ViewSpiritCost on Characters.CharacterID = ViewSpiritCost.CharacterID
@@ -133,7 +156,9 @@ from CharacterGear
   group by Characters.CharacterID;
   
 create view ViewEssenceCost as select
-   Characters.CharacterID,
-   sum(Essence * EssenceModifier) 
-from CharacterCyberware inner join CyberwareGrades on CharacterCyberware.Grade = CyberwareGrades.Grade
+   CharacterID,
+   sum(Essence * EssenceMultiplier) 
+from CharacterCyberware 
+     inner join CyberwareGrades on CharacterCyberware.Grade = CyberwareGrades.Grade
+     inner join Cyberware on Cyberware.Name = CharacterCyberware.Name 
 group by CharacterID;

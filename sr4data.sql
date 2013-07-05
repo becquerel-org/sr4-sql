@@ -207,7 +207,8 @@ insert into Skills
     -- Language
     ('Language', null, 0, 0, 'Intuition', 'Must be taken separately for each language desired'), 
     -- Knowledge
-    ('Knowledge', null, 0, 0, 'Logic', 'Must be taken separately for each knowledge skill desired')
+    ('Knowledge', null, 0, 0, 'Logic', 'Must be taken separately for each knowledge skill desired'),
+    ('Criminal Organizations', null, 0, 0, 'Logic', '')
     ;
     
 
@@ -840,35 +841,116 @@ values
 ('Stealth', 'Hacking', 'Hacking', 'Attempts to hide the hacker from other system processes'),
 -- Autosofts
 ('Track', 'Hacking', 'Computer', 'Analyzes a user''s connection and follows the datatrail back to the originating node'),
-('Clearsight', 'Autosoft', 'Improve the Pilot''s cognitive abilities, allowing it to better analyze and judge sensory input'),
-('Defense', 'Autosoft', 'Enables the drone to identify, guard against and dodge physical attacks'),
-('Electronic Warfare', 'Autosoft', 'Provides the drone with an in-depth knowledge of radio communications and the use of electronic warfare against them'),
-('Maneuver (Ground vehicle)', 'Autosoft', 'Helps a pilot maneuver ground vehicles'),
-('Maneuver (Anthroform)', 'Autosoft', 'Helps a pilot maneuver anthroform vehicles'),
-('Maneuver (Aircraft)', 'Autosoft', 'Helps a pilot maneuver aircraft within the atmosphere'),
-('Maneuver (Aerospace)', 'Autosoft', 'Helps a pilot maneuver aircraft outside the atmosphere'),
-('Maneuver (Watercraft)', 'Autosoft', 'Helps a pilot maneuver watercraft'),
-('Targeting (Archery)', 'Autosoft', 'Mimics the Archery attack skill'),
-('Targeting (Automatics)', 'Autosoft', 'Mimics the Automatics attack skill'),
-('Targeting (Blades)', 'Autosoft', 'Mimics the Blades attack skill'),
-('Targeting (Clubs)', 'Autosoft', 'Mimics the Clubs attack skill'),
-('Targeting (Heavy Weapons)', 'Autosoft', 'Mimics the Heavy Weapons attack skill'),
-('Targeting (Longarms)', 'Autosoft', 'Mimics the Longarms attack skill'),
-('Targeting (Pistols)', 'Autosoft', 'Mimics the Pistols attack skill'),
-('Targeting (Throwing Weapons)', 'Autosoft', 'Mimics the Throwing Weapons attack skill'),
-('Targeting (Unarmed Combat)', 'Autosoft', 'Mimics the Unarmed Combat attack skill'),
+('Clearsight', 'Autosoft', null,  'Improve the Pilot''s cognitive abilities, allowing it to better analyze and judge sensory input'),
+('Defense', 'Autosoft', null,  'Enables the drone to identify, guard against and dodge physical attacks'),
+('Electronic Warfare', 'Autosoft', null,  'Provides the drone with an in-depth knowledge of radio communications and the use of electronic warfare against them'),
+('Maneuver (Ground vehicle)', 'Autosoft', null,  'Helps a pilot maneuver ground vehicles'),
+('Maneuver (Anthroform)', 'Autosoft', null,  'Helps a pilot maneuver anthroform vehicles'),
+('Maneuver (Aircraft)', 'Autosoft', null,  'Helps a pilot maneuver aircraft within the atmosphere'),
+('Maneuver (Aerospace)', 'Autosoft', null,  'Helps a pilot maneuver aircraft outside the atmosphere'),
+('Maneuver (Watercraft)', 'Autosoft', null,  'Helps a pilot maneuver watercraft'),
+('Targeting (Archery)', 'Autosoft', null,  'Mimics the Archery attack skill'),
+('Targeting (Automatics)', 'Autosoft', null,  'Mimics the Automatics attack skill'),
+('Targeting (Blades)', 'Autosoft', null,  'Mimics the Blades attack skill'),
+('Targeting (Clubs)', 'Autosoft', null,  'Mimics the Clubs attack skill'),
+('Targeting (Heavy Weapons)', 'Autosoft', null,  'Mimics the Heavy Weapons attack skill'),
+('Targeting (Longarms)', 'Autosoft', null,  'Mimics the Longarms attack skill'),
+('Targeting (Pistols)', 'Autosoft', null,  'Mimics the Pistols attack skill'),
+('Targeting (Throwing Weapons)', 'Autosoft', null,  'Mimics the Throwing Weapons attack skill'),
+('Targeting (Unarmed Combat)', 'Autosoft', null,  'Mimics the Unarmed Combat attack skill'),
 -- Linguasofts
-('English', 'Linguasoft', ''),
-('Spanish', 'Linguasoft', ''),
-('French', 'Linguasoft', ''),
-('Japanese', 'Linguasoft', ''),
-('Cantonese', 'Linguasoft', ''),
-('Mandarin', 'Linguasoft', ''),
-('German', 'Linguasoft', ''),
-('Arabic', 'Linguasoft', ''),
-('Turkish', 'Linguasoft', ''),
-('Or''zet', 'Linguasoft', ''),
-('Sperethiel', 'Linguasoft', '');
+('English', 'Linguasoft', null, ''),
+('Spanish', 'Linguasoft', null, ''),
+('French', 'Linguasoft', null, ''),
+('Japanese', 'Linguasoft', null, ''),
+('Cantonese', 'Linguasoft', null, ''),
+('Mandarin', 'Linguasoft', null, ''),
+('German', 'Linguasoft', null, ''),
+('Arabic', 'Linguasoft', null, ''),
+('Turkish', 'Linguasoft', null, ''),
+('Or''zet', 'Linguasoft', null, ''),
+('Sperethiel', 'Linguasoft', null, '');
+
+insert into Cyberware
+(
+Name,
+Essence,
+CapacityRating
+)
+values
+('Commlink', 0.2, -2),
+('Control Rig', 0.5, -2),
+('Cranial Bomb (Kink)', 0, -1),
+('Cranial Bomb (Microbomb)', 0, -2),
+('Cranial Bomb (Area Bomb)', 0, -3),
+('Datajack', 0.1, -1),
+('Data Lock', 0.1, -1),
+('Olfactory Booster', 0.2, -2),
+('Sim Module', 0.2, -2),
+('Sim Module (Hot-Sim modified)', 0.2, -2),
+('Taste Booster', 0.2, null),
+('Tooth Storage Compartment', 0, null),
+('Tooth Breakable Compartment', 0, null),
+('Ultrasound Sensor', 0.3, -2),
+('Voice Modulator', 0.2, null),
+-- Eyeware (Core Book p 341)
+('Cybereyes Basic System (Rating 1)', 0.2, 4),
+('Cybereyes Basic System (Rating 2)', 0.3, 8),
+('Cybereyes Basic System (Rating 3)', 0.4, 12),
+('Cybereyes Basic System (Rating 4)', 0.5, 16),
+('Eye Recording Unit', 0.1, 0),
+('Flare Compensation', 0.1, -1),
+('Image Link', 0.1, 4),
+('Low-light Vision', 0.1, 2),
+('Ocular Drone', null, -6),
+('Protective Covers', null, null),
+('Retinal Duplication', 0.1, -1),
+('Smartlink', 0.1, -3),
+('Thermographic Vision', 0.1, -2),
+('Vision Enhancement (Rating 1)', 0.1, -1),
+('Vision Enhancement (Rating 2)', 0.1, -2),
+('Vision Enhancement (Rating 3)', 0.1, -3),
+('Vision Magnification', 0.1, -2),
+-- Earware (Core Book p 341)
+('Cyberears (Rating 1)', 0.2, 4),
+('Cyberears (Rating 2)', 0.3, 8),
+('Cyberears (Rating 3)', 0.4, 12),
+('Cyberears (Rating 4)', 0.5, 16),
+('Audio Enhancement (Rating 1)', 0.1, -1),
+('Audio Enhancement (Rating 2)', 0.1, -2),
+('Audio Enhancement (Rating 3)', 0.1, -3),
+('Balance Augmenter', 0.1, -4),
+('Damper', 0.1, -1),
+('Ear Recording Unit', 0.1, null), -- included in the basic system
+('Select Sound Filter (Rating 1)', 0.1, -1),
+('Select Sound Filter (Rating 2)', 0.1, -2),
+('Select Sound Filter (Rating 3)', 0.1, -3),
+('Select Sound Filter (Rating 4)', 0.1, -4),
+('Select Sound Filter (Rating 5)', 0.1, -5),
+('Select Sound Filter (Rating 6)', 0.1, -6),
+('Sound Link', 0.1, null), -- included
+('Spatial Recognizer', 0.1, -2),
+-- Bodyware (Core Book p. 342)
+('Bone Lacing (Plastic)', 0.5, null),
+('Bone Lacing (Aluminum)', 1.0, null),
+('Bone Lacing (Titanium)', 1.5, null),
+('Dermal Plating (Rating 1)', 0.5, null),
+('Dermal Plating (Rating 2)', 1, null),
+('Dermal Plating (Rating 3)', 1.5, null),
+('Fingertip Compartment', 0.1, -1),
+('Grapple Gun', 0.5, -5),
+('Internal Air Tank', 0.25, 3),
+('Muscle Replacement (Rating 1)', 1, null),
+('Muscle Replacement (Rating 2)', 2, null),
+('Muscle Replacement (Rating 3)', 3, null),
+('Muscle Replacement (Rating 4)', 4, null),
+('Reaction Enhancers (Rating 1)', 0.3, null),
+('Obvious Cyberarm', 1, 15),
+('Obvious Cyberleg', 1, 20),
+('Obvious Hand', 0.25, 4),
+('Obvious Foot', 0.25, 3),
+('Obvious Lower Arm', 0.45, 10),
+('Obvious Lower Leg', 0.45, 12);
 
 insert into Sprites
 (
@@ -885,7 +967,7 @@ values
 ('Courier', 0, 1, 1, 3, 3, 0, 'Messengers and trackers, good for securely conveying important data through the matrix'),
 ('Crack', 0, 1, 0, 3, 3, 0, 'Masters at finding programming flaws and exploits'),
 ('Data', 0, 0, -2, 2, 3, 0, 'Excel at finding and manipulating information'),
-('Fault', 0, 2, 1, 3, 0, 'Designed to inject code errors and cause programs to fail'),
+('Fault', 0, 2, 1, 3, 3, 0, 'Designed to inject code errors and cause programs to fail'),
 ('Machine', 0, 0, 2, 2, 3, 0, 'Adept at manipulating devices');
 
 
@@ -910,7 +992,7 @@ values
 
 insert into SpriteComplexForms
 (SpriteType,
-ComplexForm
+ComplexForm,
 Optional
 )
 values
@@ -958,9 +1040,9 @@ values
 ;
 
 insert into SpritePowers
-(SpriteType text not null,
-SpritePower text not null,
-Description text
+(SpriteType,
+SpritePower,
+Description
 )
 values
 ('Courier', 'Cookie', 'Tag a target icon with a hidden piece of code that can be used to track the icon''s Matrix activities'),

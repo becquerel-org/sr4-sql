@@ -1,4 +1,4 @@
-    create table Book
+    create table Books
 (Title text not null primary key);
 
 create table Messages
@@ -149,6 +149,9 @@ Specialisation text,
 foreign key(CharacterID) references Characters(CharacterID),
 foreign key(Skill) references Skills(Name)
 );
+
+
+
 
 
 create table SkillReferences
@@ -343,7 +346,7 @@ create table Cyberware
 (
 Name text not null primary key,
 Essence number,
-CapacityRating number,
+CapacityRating number
 );
 
 -- insert half a billion gear tables here
@@ -359,18 +362,19 @@ CharacterID integer not null,
 Name text not null,
 Grade text not null,
 constraint pk_char_cw primary key (CharacterID, Name),
-foreign key CharacterID references Characters(CharacterID),
-foreign key Name references Cyberware(Name),
-foreign key Grade references CyberwareGrades(Grade)
+foreign key (CharacterID) references Characters(CharacterID),
+foreign key (Name) references Cyberware(Name),
+foreign key (Grade) references CyberwareGrades(Grade)
 );
 
-create trigger after insert on CharacterGear
+create trigger cyberware_grade after insert on CharacterGear
 when NEW.GearType = 'Cyberware' 
 begin
 insert into CharacterCyberware
 (CharacterID, Name, Grade)
 values
 (NEW.CharacterID, NEW.Name, 'Standard');
+end;
 
 create table Vehicle
 (
@@ -535,7 +539,7 @@ create table Echoes
 (
 Name text not null primary key,
 Multiple boolean not null, -- can this echo be taken multiple times?
-MaxAmount integer, -- need trigger to check this
+MaxAmount integer, 
 Description text
 );
 
@@ -564,7 +568,7 @@ create trigger chk_submersion_insert after insert on CharacterEchoes
                                             and SubmersionGrade >= (select SUM(Taken) from CharacterEchoes where CharacterID = NEW.CharacterID))
         or (NEW.Taken > 1 and exists (select Multiple from Echoes where Name = NEW.Name and Multiple = 0))
         or ((exists (select Prerequisite from EchoPrerequisites where Echo = NEW.Name)) and (not exists (select Echo from CharacterEchoes left outer join EchoPrerequisites on EchoPrerequisites.Echo = NEW.Name where CharacterEchoes.Echo = EchoPrerequisites.Prerequisite)))
-        or (exists (select Multiple from Echoes where Name = NEW.Name and Multiple = 1 and MaxAmount < NEW.Taken))
+        or (exists (select Multiple from Echoes where Name = NEW.Name and Multiple = 1 and MaxAmount < NEW.Taken)))
   begin
   delete from CharacterEchoes where CharacterID = NEW.CharacterID;
   end;
@@ -573,7 +577,7 @@ create trigger chk_submersion_update after update on CharacterEchoes
   when (not exists (select SubmersionGrade from CharacterSubmersion where CharacterSubmersion.CharacterID = NEW.CharacterID and SubmersionGrade >= (select SUM(Taken) from CharacterEchoes where CharacterID = NEW.CharacterID))
         or (NEW.Taken > 1 and exists (select Multiple from Echoes where EchoID = NEW.EchoID and Multiple = 0))
         or ((exists (select Prerequisite from EchoPrerequisites where Echo = NEW.Name)) and (not exists (select Echo from CharacterEchoes left outer join EchoPrerequisites on EchoPrerequisites.Echo = NEW.Name where CharacterEchoes.Echo = EchoPrerequisites.Prerequisite)))
-        or (exists (select Multiple from Echoes where Name = NEW.Name and Multiple = 1 and MaxAmount < NEW.Taken))
+        or (exists (select Multiple from Echoes where Name = NEW.Name and Multiple = 1 and MaxAmount < NEW.Taken)))
   begin
   delete from CharacterEchoes where CharacterID = NEW.CharacterID;
   end;
