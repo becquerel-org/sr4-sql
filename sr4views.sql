@@ -79,6 +79,7 @@ create view CharacterKnowledgeSkillSpecialisationCost as select
           and exists (select Name from Skills where CharacterSkills.Skill = Skills.Name and not Skills.IsActive)
        group by CharacterID;
        
+       
 create view ViewActiveSkillCost as select
     CharacterSkills.CharacterID,
 	case when CharacterSkills.Grouped then sum(Rating * 10) 
@@ -93,19 +94,27 @@ from CharacterSkills
 group by CharacterSkills.CharacterID;
 
 create view ViewKnowledgeSkillCost as select
-	CharacterSkills.CharacterID,
+	CharacterSkills.CharacterID as CharacterID,
  	(2 * sum(Rating) 
  	 + 2 * CharacterKnowledgeSkillSpecialisationCost.SpecCount
  	 - (6 * (CharacterAttributes.Logic + CharacterAttributes.Intuition)))
 	 as BP,
-	 sum(Rating) as sumRating,
-	 CharacterKnowledgeSkillSpecialisationCost.SpecCount as SpecCount
+	 3 * (CharacterAttributes.Logic + CharacterAttributes.Intuition) as MaxAdditionalBP,
+	 CreationComplete
 from CharacterSkills
 	inner join Skills on CharacterSkills.Skill = Skills.Name
 	inner join CharacterAttributes on CharacterSkills.CharacterID = CharacterAttributes.CharacterID
+	inner join Characters on Characters.CharacterID = CharacterAttributes.CharacterID
 	inner join CharacterKnowledgeSkillSpecialisationCost on CharacterSkills.CharacterID = CharacterKnowledgeSkillSpecialisationCost.CharacterID
 	where not Skills.IsActive
 group by CharacterSkills.CharacterID;
+
+create trigger chk_knowledge_skill_points after insert on CharacterSkills
+when exists (select BP from ViewKnowledgeSkillCost where ViewKnowledgeSkillCost.CharacterID = NEW.CharacterID and BP > ViewKnowledgeSkillCost.MaxAdditionalBP and not CreationComplete)
+begin
+delete from CharacterSkills where CharacterID = NEW.CharacterID and Skill = NEW.Skill;
+select raise(abort, 'Character may only purchase 3 * (Logic + Intuition) additional knowledge skill points');
+end;
 
 create view ViewComplexFormCost as select
      CharacterComplexForms.CharacterID,

@@ -20,6 +20,7 @@ TotalKarma integer,
 CurrentKarma integer,
 StreetCred integer,
 Notoriety integer,
+NativeLanguage text,
 CreationComplete boolean
 );
 
@@ -120,6 +121,7 @@ Name integer not null,
 Description text,
 Rating integer not null,
 Influence integer not null,
+constraint pk_cconnections primary key (CharacterID, Name, Description),
 foreign key(CharacterID) references Characters(CharacterID)
 );
 
@@ -146,6 +148,7 @@ Skill text not null,
 Rating  integer not null,
 Grouped boolean not null,
 Specialisation text,
+constraint pk_cskills primary key (CharacterID, Skill),
 foreign key(CharacterID) references Characters(CharacterID),
 foreign key(Skill) references Skills(Name)
 );
