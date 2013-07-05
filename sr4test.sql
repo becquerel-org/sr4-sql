@@ -26,11 +26,10 @@ Intuition,
 Logic,
 Charisma,
 Willpower,
-Essence,
 Edge  )
 values
-(1, 2, 2, 2, 2, 3, 3, 3, 3, 6, 1),
-(3, 2, 2, 2, 2, 3, 4, 2, 3, 6, 0);
+(1, 2, 2, 2, 2, 3, 3, 3, 3, 1),
+(3, 2, 2, 2, 2, 3, 4, 2, 3, 0);
 
 insert into CharacterConnections
 (CharacterID,
@@ -113,4 +112,13 @@ values
 (3, 1, 'Code', 5, 2),
 --(3, 2, 'Code', 5, 1),
 (3, 3, 'Data', 5, 1);
+
+
+insert into CharacterCyberware
+(CharacterID, Name, Grade)
+values
+(2, 'Control Rig', 'Standard'),
+(2, 'Bone Lacing (Aluminum)', 'Alphaware'),
+(2, 'Dermal Plating (Rating 3)', 'Betaware'),
+(2, 'Muscle Replacement (Rating 3)', 'Deltaware');
 

@@ -93,7 +93,7 @@ group by CharacterSkills.CharacterID;
 
 create view ViewSkillGroupCost as select
      CharacterSkillGroups.CharacterID,
-     10 * sum(Rating) as BP     
+     10 * sum(Rating) as BP
 from CharacterSkillGroups group by CharacterID;
 
 create view ViewKnowledgeSkillCost as select
@@ -154,7 +154,6 @@ from Characters
     left outer join ViewActiveSkillCost on Characters.CharacterID = ViewActiveSkillCost.CharacterID
     left outer join ViewSkillGroupCost on Characters.CharacterID = ViewSkillGroupCost.CharacterID
     left outer join ViewKnowledgeSkillCost on Characters.CharacterID = ViewKnowledgeSkillCost.CharacterID
-   -- left outer join CharacterActiveSkillSpecialisationCost on Characters.CharacterID = CharacterActiveSkillSpecialisationCost.CharacterID
     left outer join CharacterSpells on Characters.CharacterID = CharacterSpells.CharacterID
     left outer join ViewComplexFormCost on Characters.CharacterID = ViewComplexFormCost.CharacterID
     -- left outer join ViewSpiritCost on Characters.CharacterID = ViewSpiritCost.CharacterID
@@ -171,8 +170,54 @@ from CharacterGear
   
 create view ViewEssenceCost as select
    CharacterID,
-   sum(Essence * EssenceMultiplier) 
+   6 - sum(Essence * EssenceMultiplier) as TotalEssence
 from CharacterCyberware 
      inner join CyberwareGrades on CharacterCyberware.Grade = CyberwareGrades.Grade
      inner join Cyberware on Cyberware.Name = CharacterCyberware.Name 
 group by CharacterID;
+
+
+create trigger chk_attributes_insert after insert on CharacterAttributes when
+(NEW.BodyAttr > (select MaxBody - BaseBody from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.BodyAttr < 0) or
+(NEW.Reaction > (select MaxReaction - BaseReaction from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Reaction < 0) or
+(NEW.Agility > (select MaxAgility - BaseAgility from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Agility < 0) or
+(NEW.Strength > (select MaxStrength - BaseStrength from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Strength < 0) or
+(NEW.Logic > (select MaxLogic - BaseLogic from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Logic < 0) or
+(NEW.Intuition > (select MaxIntuition - BaseIntuition from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Intuition < 0) or
+(NEW.Charisma > (select MaxCharisma - BaseCharisma from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Charisma < 0) or
+(NEW.Willpower > (select MaxWillpower - BaseWillpower from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Willpower < 0) or
+(NEW.Edge > (select MaxEdge - BaseEdge from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Edge < 0) or
+(NEW.Magic > ((select TotalEssence from ViewEssenceCost where CharacterID = NEW.CharacterID limit 1) + (select InitiationGrade from CharacterInitiation where CharacterID = NEW.CharacterID limit 1)) or NEW.Magic < 0) or
+(NEW.Resonance > ((select TotalEssence from ViewEssenceCost where CharacterID = NEW.CharacterID limit 1) + (select SubmersionGrade from CharacterSubmersion where CharacterID = NEW.CharacterID limit 1)) or NEW.Resonance < 0) 
+begin
+  select raise(abort, 'One or more attributes out of bounds');
+end;
+
+
+
+create trigger chk_attributes_update after update on CharacterAttributes when
+(NEW.BodyAttr > (select MaxBody - BaseBody from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.BodyAttr < 0) or
+(NEW.Reaction > (select MaxReaction - BaseReaction from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Reaction < 0) or
+(NEW.Agility > (select MaxAgility - BaseAgility from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Agility < 0) or
+(NEW.Strength > (select MaxStrength - BaseStrength from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Strength < 0) or
+(NEW.Logic > (select MaxLogic - BaseLogic from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Logic < 0) or
+(NEW.Intuition > (select MaxIntuition - BaseIntuition from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Intuition < 0) or
+(NEW.Charisma > (select MaxCharisma - BaseCharisma from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Charisma < 0) or
+(NEW.Willpower > (select MaxWillpower - BaseWillpower from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Willpower < 0) or
+(NEW.Edge > (select MaxEdge - BaseEdge from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Edge < 0) or
+(NEW.Magic > ((select TotalEssence from ViewEssenceCost where CharacterID = NEW.CharacterID limit 1) + (select InitiationGrade from CharacterInitiation where CharacterID = NEW.CharacterID limit 1)) or NEW.Magic < 0) or
+(NEW.Resonance > ((select TotalEssence from ViewEssenceCost where CharacterID = NEW.CharacterID limit 1) + (select SubmersionGrade from CharacterSubmersion where CharacterID = NEW.CharacterID limit 1)) or NEW.Resonance < 0) 
+begin
+  select raise(abort, 'One or more attributes out of bounds');
+end;
+
+create trigger chk_essence_cap before insert on CharacterCyberware when
+  ((select Magic from CharacterAttributes where CharacterAttributes.CharacterID = NEW.CharacterID limit 1) 
+      > ((select TotalEssence from ViewEssenceCost where CharacterID = NEW.CharacterID limit 1) 
+         + (select InitiationGrade from CharacterInitiation where CharacterID = NEW.CharacterID limit 1)))
+or ((select Resonance from CharacterAttributes where CharacterAttributes.CharacterID = NEW.CharacterID limit 1) 
+      > ((select TotalEssence from ViewEssenceCost where CharacterID = NEW.CharacterID limit 1) 
+         + (select SubmersionGrade from CharacterSubmersion where CharacterID = NEW.CharacterID limit 1)))
+begin
+   select raise(abort, 'Magic or Resonance attribute exceeds Essence');
+end;

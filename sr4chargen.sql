@@ -88,31 +88,15 @@ Intuition integer not null,
 Logic integer not null,
 Charisma integer not null,
 Willpower integer not null,
-Essence  integer not null,
 Edge integer not null,
 Magic integer, -- needs constraint, can be NULL
 Resonance integer, -- needs constraint, can be NULL
 Message text,
 foreign key(CharacterID) references Characters(CharacterID),
 foreign key(Message) references Messages(Message)
-
 );
 
-create trigger chk_attributes after insert on CharacterAttributes when
-(NEW.BodyAttr > (select MaxBody - BaseBody from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.BodyAttr < 0) or
-(NEW.Reaction > (select MaxReaction - BaseReaction from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Reaction < 0) or
-(NEW.Agility > (select MaxAgility - BaseAgility from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Agility < 0) or
-(NEW.Strength > (select MaxStrength - BaseStrength from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Strength < 0) or
-(NEW.Logic > (select MaxLogic - BaseLogic from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Logic < 0) or
-(NEW.Intuition > (select MaxIntuition - BaseIntuition from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Intuition < 0) or
-(NEW.Charisma > (select MaxCharisma - BaseCharisma from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Charisma < 0) or
-(NEW.Willpower > (select MaxWillpower - BaseWillpower from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Willpower < 0) or
-(NEW.Edge > (select MaxEdge - BaseEdge from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Edge < 0) or
-(NEW.Magic > (6 + (select InitiationGrade from CharacterInitiation where CharacterID = NEW.CharacterID limit 1)) or NEW.Magic < 0) or
-(NEW.Resonance > (6 + (select SubmersionGrade from CharacterSubmersion where CharacterID = NEW.CharacterID limit 1)) or NEW.Resonance < 0) 
-begin
-  update CharacterAttributes set Message = 'One or more attributes out of bounds';
-end;
+
 
 create table CharacterConnections
 (
