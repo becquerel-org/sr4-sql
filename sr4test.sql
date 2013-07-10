@@ -122,3 +122,11 @@ values
 (2, 'Dermal Plating (Rating 3)', 'Betaware'),
 (2, 'Muscle Replacement (Rating 3)', 'Deltaware');
 
+
+insert into CharacterGear
+(CharacterID, GearType, GearName, Quantity)
+values
+(1, 'MeleeWeapon', 'Katana', 1), -- 1000
+(1, 'Firearms', 'Ares Predator IV', 2), --700
+(1, 'Ammunition', 'Gel Rounds', 100), --3000
+(1, 'Armour', 'Feedback Clothing', 1); -- 500

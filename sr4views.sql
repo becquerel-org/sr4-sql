@@ -129,6 +129,20 @@ create view ViewSpriteCost as select
      CharacterSprites.CharacterID,
      sum(Tasks) as BP
 from CharacterSprites group by CharacterID;
+
+create view ViewGearNuyenCost as select
+   Characters.CharacterID as CharacterID,
+   sum(Gear.NuyenCost * coalesce(CharacterGear.Rating, 1) * CharacterGear.Quantity) as Nuyen
+from CharacterGear
+  left outer join Characters on Characters.CharacterID = CharacterGear.CharacterID
+  left outer join Gear on (CharacterGear.GearType = Gear.GearType and CharacterGear.GearName = Gear.GearName)
+  group by Characters.CharacterID;
+  
+create trigger chk_nuyen after insert on CharacterGear when 250000 < (select Nuyen from ViewGearNuyenCost where CharacterID = NEW.CharacterID limit 1)
+begin
+  select raise(abort, 'Starting characters can only spend 250000 nuyen on gear');
+ end;
+  
 		
 create view ViewTotalCost as select
     Characters.CharacterID,
@@ -145,7 +159,10 @@ create view ViewTotalCost as select
 	+ 3 * (select count(*) from CharacterSpells)
 	+ ViewComplexFormCost.BP
 	+ ViewSpriteCost.BP
-	    as BP
+	+ (select (case when cast(ViewGearNuyenCost.Nuyen/5000 as int) * 5000 = ViewGearNuyenCost.Nuyen 
+	                  then cast(ViewGearNuyenCost.Nuyen/5000 as int) 
+	                  else 1 + cast(ViewGearNuyenCost.Nuyen/5000 as int) end)) 
+	as BP
 from Characters
     left outer join Metatypes on Characters.Metatype = Metatypes.Name
     left outer join ViewConnectionCost on Characters.CharacterID = ViewConnectionCost.CharacterID
@@ -157,16 +174,12 @@ from Characters
     left outer join CharacterSpells on Characters.CharacterID = CharacterSpells.CharacterID
     left outer join ViewComplexFormCost on Characters.CharacterID = ViewComplexFormCost.CharacterID
     -- left outer join ViewSpiritCost on Characters.CharacterID = ViewSpiritCost.CharacterID
-    left outer join ViewSpriteCost on Characters.CharacterID = ViewSpriteCost.CharacterID;
+    left outer join ViewSpriteCost on Characters.CharacterID = ViewSpriteCost.CharacterID
+    left outer join ViewGearNuyenCost on Characters.CharacterID = ViewGearNuyenCost.CharacterID;
 
     
-create view ViewGearNuyenCost as select
-   Characters.CharacterID,
-   sum(Gear.NuyenCost * coalesce(CharacterGear.Rating, 1) * CharacterGear.Quantity)   
-from CharacterGear
-  left outer join Characters on Characters.CharacterID = CharacterGear.CharacterID
-  left outer join Gear on (CharacterGear.GearType = Gear.GearType and CharacterGear.GearName = Gear.GearName)
-  group by Characters.CharacterID;
+
+  
   
 create view ViewEssenceCost as select
    CharacterID,

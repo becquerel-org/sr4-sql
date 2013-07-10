@@ -229,10 +229,10 @@ foreign key (GearType) references Gear(GearType),
 foreign key (GearName) references Gear(GearName)
 );
 
-create trigger chk_gear_rating after insert on CharacterGear
-when (exists (select MinRating from Gear where Gear.GearType = CharacterGear.GearType and Gear.GearName = CharacterGear.GearName and not (CharacterGear.Rating between Gear.MinRating and Gear.MaxRating)))
+create trigger chk_gear_rating before insert on CharacterGear
+when (exists (select MinRating from Gear where Gear.GearType = NEW.GearType and Gear.GearName = NEW.GearName and not (NEW.Rating between Gear.MinRating and Gear.MaxRating)))
 begin
-DELETE FROM CharacterGear  where Gear.GearType = CharacterGear.GearType and Gear.GearName = CharacterGear.GearName;
+select raise(abort, 'Rating out of bounds');
 end;
 
 create table GearReferences
@@ -376,7 +376,7 @@ begin
 insert into CharacterCyberware
 (CharacterID, Name, Grade)
 values
-(NEW.CharacterID, NEW.Name, 'Standard');
+(NEW.CharacterID, NEW.GearName, 'Standard');
 end;
 
 create table Vehicle
