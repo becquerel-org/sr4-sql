@@ -177,10 +177,7 @@ from Characters
     left outer join ViewSpriteCost on Characters.CharacterID = ViewSpriteCost.CharacterID
     left outer join ViewGearNuyenCost on Characters.CharacterID = ViewGearNuyenCost.CharacterID;
 
-    
 
-  
-  
 create view ViewEssenceCost as select
    CharacterID,
    6 - sum(Essence * EssenceMultiplier) as TotalEssence
