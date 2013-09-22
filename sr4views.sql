@@ -146,7 +146,7 @@ begin
 		
 create view ViewTotalCost as select
     Characters.CharacterID,
-      Metatypes.BPCost
+(      Metatypes.BPCost
     + coalesce(ViewAttributeCost.BP, 0)
 	+ coalesce(ViewQualityCost.BP, 0)
  	+ coalesce(ViewActiveSkillCost.BP, 0)
@@ -157,11 +157,11 @@ create view ViewTotalCost as select
  	+ coalesce(case when ViewKnowledgeSkillCost.BP < 0 then 0 else ViewKnowledgeSkillCost.BP end, 0) 
 	+ coalesce(ViewConnectionCost.BP, 0)
 	+ 3 * (select count(*) from CharacterSpells)
-	+ ViewComplexFormCost.BP
-	+ ViewSpriteCost.BP
-	+ (select (case when cast(ViewGearNuyenCost.Nuyen/5000 as int) * 5000 = ViewGearNuyenCost.Nuyen 
-	                  then cast(ViewGearNuyenCost.Nuyen/5000 as int) 
-	                  else 1 + cast(ViewGearNuyenCost.Nuyen/5000 as int) end)) 
+	+ coalesce(ViewComplexFormCost.BP, 0)
+	+ coalesce(ViewSpriteCost.BP,0)
+	+ (select (case when cast(coalesce(ViewGearNuyenCost.Nuyen, 0)/5000 as int) * 5000 = coalesce(ViewGearNuyenCost.Nuyen, 0)
+	                  then cast(coalesce(ViewGearNuyenCost.Nuyen, 0)/5000 as int) 
+	                  else 1 + cast(coalesce(ViewGearNuyenCost.Nuyen, 0)/5000 as int) end))) 
 	as BP
 from Characters
     left outer join Metatypes on Characters.Metatype = Metatypes.Name
@@ -175,7 +175,8 @@ from Characters
     left outer join ViewComplexFormCost on Characters.CharacterID = ViewComplexFormCost.CharacterID
     -- left outer join ViewSpiritCost on Characters.CharacterID = ViewSpiritCost.CharacterID
     left outer join ViewSpriteCost on Characters.CharacterID = ViewSpriteCost.CharacterID
-    left outer join ViewGearNuyenCost on Characters.CharacterID = ViewGearNuyenCost.CharacterID;
+    left outer join ViewGearNuyenCost on Characters.CharacterID = ViewGearNuyenCost.CharacterID
+group by Characters.CharacterID;
 
 
 create view ViewEssenceCost as select
