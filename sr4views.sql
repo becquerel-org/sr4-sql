@@ -130,6 +130,16 @@ create view ViewSpriteCost as select
      sum(Tasks) as BP
 from CharacterSprites group by CharacterID;
 
+create view ViewSpiritCost as select
+     CharacterSpirits.CharacterID,
+     sum(Services) as BP
+from CharacterSpirits group by CharacterID;
+
+create view ViewBondedFociCost as select
+     CharacterBondedFoci.CharacterID,
+     sum(Force) as BP
+from CharacterBondedFoci group by CharacterID;
+
 create view ViewGearNuyenCost as select
    Characters.CharacterID as CharacterID,
    sum(Gear.NuyenCost * coalesce(CharacterGear.Rating, 1) * CharacterGear.Quantity) as Nuyen
@@ -146,7 +156,7 @@ begin
 		
 create view ViewTotalCost as select
     Characters.CharacterID,
-(      Metatypes.BPCost
+      Metatypes.BPCost
     + coalesce(ViewAttributeCost.BP, 0)
 	+ coalesce(ViewQualityCost.BP, 0)
  	+ coalesce(ViewActiveSkillCost.BP, 0)
@@ -159,9 +169,12 @@ create view ViewTotalCost as select
 	+ 3 * (select count(*) from CharacterSpells)
 	+ coalesce(ViewComplexFormCost.BP, 0)
 	+ coalesce(ViewSpriteCost.BP,0)
+	+ coalesce(ViewSpiritCost.BP,0)
+        + coalesce(ViewBondedFociCost.BP, 0)
 	+ (select (case when cast(coalesce(ViewGearNuyenCost.Nuyen, 0)/5000 as int) * 5000 = coalesce(ViewGearNuyenCost.Nuyen, 0)
 	                  then cast(coalesce(ViewGearNuyenCost.Nuyen, 0)/5000 as int) 
-	                  else 1 + cast(coalesce(ViewGearNuyenCost.Nuyen, 0)/5000 as int) end))) 
+			  else cast(coalesce(ViewGearNuyenCost.Nuyen, 0)/5000 as int) + 1 end))
+
 	as BP
 from Characters
     left outer join Metatypes on Characters.Metatype = Metatypes.Name
@@ -173,8 +186,9 @@ from Characters
     left outer join ViewKnowledgeSkillCost on Characters.CharacterID = ViewKnowledgeSkillCost.CharacterID
     left outer join CharacterSpells on Characters.CharacterID = CharacterSpells.CharacterID
     left outer join ViewComplexFormCost on Characters.CharacterID = ViewComplexFormCost.CharacterID
-    -- left outer join ViewSpiritCost on Characters.CharacterID = ViewSpiritCost.CharacterID
     left outer join ViewSpriteCost on Characters.CharacterID = ViewSpriteCost.CharacterID
+    left outer join ViewSpiritCost on Characters.CharacterID = ViewSpiritCost.CharacterID
+    left outer join ViewBondedFociCost on Characters.CharacterID = ViewBondedFociCost.CharacterID
     left outer join ViewGearNuyenCost on Characters.CharacterID = ViewGearNuyenCost.CharacterID
 group by Characters.CharacterID;
 

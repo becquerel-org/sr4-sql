@@ -650,12 +650,12 @@ constraint pk_sprites primary key (CharacterID, SpriteID)
 
 create view CharacterSpriteCount as select CharacterID, Charisma as MaxSpriteCount from CharacterAttributes;
 
-create view CharacterSpriteTasks as select CharacterID, Rating as MaxSpriteTasks from CharacterSkills where CharacterSkills.Skill = 'Compiling';
+create view CharacterSpriteTasks as select CharacterID, Rating as MaxSpriteTasks from ViewCharacterSkills where ViewCharacterSkills.Skill = 'Compiling';
 
 
 create trigger chk_spritecount before insert on CharacterSprites
 when exists (select CreationComplete from Characters where CharacterID = NEW.CharacterID and coalesce(CreationComplete, 0) = 0) 
-     and (exists (select MaxSpriteCount from CharacterSpriteCount where CharacterSpriteCount.CharacterID = NEW.CharacterID and MaxSpriteCount <= (select count(*) from CharacterSprites where CharacterID = NEW.CharacterID))
+     and (exists (select MaxSpriteCount from CharacterSpriteCount where CharacterSpriteCount.CharacterID = NEW.CharacterID and MaxSpriteCount < (select count(*) from CharacterSprites where CharacterID = NEW.CharacterID))
           or exists (select MaxSpriteTasks from CharacterSpriteTasks where CharacterSpriteTasks.CharacterID = NEW.CharacterID and MaxSpriteTasks < NEW.Tasks))
 begin -- error handling
 select raise(abort, 'Maximum amount or rating of sprites exceeded');
@@ -667,6 +667,51 @@ when exists (select CreationComplete from Characters where CharacterID = NEW.Cha
 begin
   update CharacterSprites set Rating = (select Resonance from CharacterAttributes where CharacterAttributes.CharacterID = NEW.CharacterID )
          where CharacterID = NEW.CharacterID and SpriteID = NEW.SpriteID;
+end;
+
+create view CharacterSpiritCount as select CharacterID, Charisma as MaxSpiritCount from CharacterAttributes;
+create view CharacterSpiritServices as select CharacterID, Rating as MaxSpiritServices from ViewCharacterSkills where ViewCharacterSkills.Skill = 'Summoning';
+
+create table CharacterSpirits
+(
+CharacterID integer not null,
+SpiritID integer not null,
+SpiritType text not null,
+Force integer not null,
+Services integer not null,
+Notes text,
+foreign key (CharacterID) references Characters(CharacterID),
+constraint pk_spirits primary key (CharacterID, SpiritID)
+
+);
+
+create trigger chk_spiritcount before insert on CharacterSpirits
+   when (exists (select MaxSpiritCount from CharacterSpiritCount where CharacterID = NEW.CharacterID and MaxSpiritCount < (select count(*) from CharacterSpirits where CharacterID = NEW.CharacterID))
+         or exists (select MaxSpiritServices from CharacterSpiritServices where CharacterID = NEW.CharacterID and MaxSpiritServices < NEW.Services))
+begin
+  select raise(abort, 'Maximum amount or services of spirits exceeded');
+end;
+
+
+create trigger spirit_force after insert on CharacterSpirits
+begin
+  update CharacterSpirits set Force = (select Magic from CharacterAttributes where CharacterAttributes.CharacterID = NEW.CharacterID)
+    where CharacterID = NEW.CharacterID and SpiritID = NEW.SpiritID;
+end;
+
+
+
+create table CharacterBondedFoci
+(
+  CharacterID integer not null,
+  Force integer not null 
+);
+
+create trigger foci_count before insert on CharacterBondedFoci
+when ((select count(*) from CharacterBondedFoci) >= (select Magic from CharacterAttributes where CharacterAttributes.CharacterID = NEW.CharacterID)
+     or ((select sum(Force) from CharacterBondedFoci) > 5 * (select Magic from CharacterAttributes where CharacterAttributes.CharacterID = NEW.CharacterID)))
+begin
+  select raise(abort, 'Maximum amount of bonded foci or total Force of bonded foci exceeded');
 end;
 
 create trigger magic_insert after insert on CharacterQualities when NEW.Quality = 'Magician' or NEW.Quality = 'Adept' or NEW.Quality = 'Mystic Adept'
