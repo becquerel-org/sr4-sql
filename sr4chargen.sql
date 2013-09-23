@@ -595,6 +595,45 @@ foreign key(Echo) references Echoes(Name),
 foreign key(Title) references Books(Title)
 );
 
+create table Spirits
+(
+SpiritType text not null primary key,
+BodyModifier integer not null,
+AgilityModifier integer not null,
+ReactionModifier integer not null,
+StrengthModifier integer not null,
+-- spirit initiative is (F*multiplier) + constant
+InitMultiplier integer not null,
+InitConstant integer not null,
+IP integer not null,
+AstralInitModifier integer not null,
+AstralIP integer not null,
+EdgeModifier integer default 1,
+StandardMovement integer not null,
+FastMovement integer not null,
+Flying integer not null,
+Description text
+);
+
+create table SpiritSkills
+(
+SpiritType text not null,
+Skill text not null,
+foreign key(SpiritType) references Spirits(SpiritType)
+constraint pk_spirit_skill primary key (SpiritType, Skill)
+);
+
+create table SpiritPowers
+(
+SpiritType text not null,
+Power text not null,
+Optional integer not null,
+Description text,
+foreign key(SpiritType) references Spirits(SpiritType),
+constraint pk_spirit_powers primary key (SpiritType, Power)
+);
+
+
 create table Sprites
 (
 SpriteType text not null primary key,
@@ -692,13 +731,11 @@ begin
   select raise(abort, 'Maximum amount or services of spirits exceeded');
 end;
 
-
 create trigger spirit_force after insert on CharacterSpirits
 begin
   update CharacterSpirits set Force = (select Magic from CharacterAttributes where CharacterAttributes.CharacterID = NEW.CharacterID)
     where CharacterID = NEW.CharacterID and SpiritID = NEW.SpiritID;
 end;
-
 
 
 create table CharacterBondedFoci
