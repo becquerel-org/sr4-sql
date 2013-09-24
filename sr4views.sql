@@ -218,17 +218,27 @@ begin
   select raise(abort, 'One or more attributes out of bounds');
 end;
 
-
+create view ViewExceptionalAttributes as select
+CharacterID,
+case when (exists (select Description from CharacterQualities where Quality = 'Exceptional Attribute' and Description = 'Body')) then 1 else 0 end as ExceptionalBody,
+case when (exists (select Description from CharacterQualities where Quality = 'Exceptional Attribute' and Description = 'Agility')) then 1 else 0 end as ExceptionalAgility,
+case when (exists (select Description from CharacterQualities where Quality = 'Exceptional Attribute' and Description = 'Reaction')) then 1 else 0 end as ExceptionalReaction,
+case when (exists (select Description from CharacterQualities where Quality = 'Exceptional Attribute' and Description = 'Strength')) then 1 else 0 end as ExceptionalStrength,
+case when (exists (select Description from CharacterQualities where Quality = 'Exceptional Attribute' and Description = 'Logic')) then 1 else 0 end as ExceptionalLogic,
+case when (exists (select Description from CharacterQualities where Quality = 'Exceptional Attribute' and Description = 'Willpower')) then 1 else 0 end as ExceptionalWillpower,
+case when (exists (select Description from CharacterQualities where Quality = 'Exceptional Attribute' and Description = 'Intuition')) then 1 else 0 end as ExceptionalIntuition,
+case when (exists (select Description from CharacterQualities where Quality = 'Exceptional Attribute' and Description = 'Charisma')) then 1 else 0 end as ExceptionalCharisma
+from CharacterQualities;
 
 create trigger chk_attributes_update after update on CharacterAttributes when
-(NEW.BodyAttr > (select MaxBody - BaseBody from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.BodyAttr < 0) or
-(NEW.Reaction > (select MaxReaction - BaseReaction from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Reaction < 0) or
-(NEW.Agility > (select MaxAgility - BaseAgility from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Agility < 0) or
-(NEW.Strength > (select MaxStrength - BaseStrength from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Strength < 0) or
-(NEW.Logic > (select MaxLogic - BaseLogic from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Logic < 0) or
-(NEW.Intuition > (select MaxIntuition - BaseIntuition from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Intuition < 0) or
-(NEW.Charisma > (select MaxCharisma - BaseCharisma from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Charisma < 0) or
-(NEW.Willpower > (select MaxWillpower - BaseWillpower from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Willpower < 0) or
+(NEW.BodyAttr > (select ExceptionalBody from ViewExceptionalAttributes where CharacterID = NEW.CharacterID limit 1) + (select MaxBody - BaseBody from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.BodyAttr < 0) or
+(NEW.Reaction > (select ExceptionalReaction from ViewExceptionalAttributes where CharacterID = NEW.CharacterID limit 1)  + (select MaxReaction - BaseReaction from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Reaction < 0) or
+(NEW.Agility > (select ExceptionalAgility from ViewExceptionalAttributes where CharacterID = NEW.CharacterID limit 1)  + (select MaxAgility - BaseAgility from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Agility < 0) or
+(NEW.Strength > (select ExceptionalStrength from ViewExceptionalAttributes where CharacterID = NEW.CharacterID limit 1)  + (select MaxStrength - BaseStrength from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Strength < 0) or
+(NEW.Logic > (select ExceptionalLogic from ViewExceptionalAttributes where CharacterID = NEW.CharacterID limit 1)  + (select MaxLogic - BaseLogic from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Logic < 0) or
+(NEW.Intuition > (select ExceptionalIntuition from ViewExceptionalAttributes where CharacterID = NEW.CharacterID limit 1)  + (select MaxIntuition - BaseIntuition from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Intuition < 0) or
+(NEW.Charisma > (select ExceptionalCharisma from ViewExceptionalAttributes where CharacterID = NEW.CharacterID limit 1)  + (select MaxCharisma - BaseCharisma from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Charisma < 0) or
+(NEW.Willpower > (select ExceptionalWillpower from ViewExceptionalAttributes where CharacterID = NEW.CharacterID limit 1)  + (select MaxWillpower - BaseWillpower from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Willpower < 0) or
 (NEW.Edge > (select MaxEdge - BaseEdge from CharacterMetatypes where CharacterMetatypes.CharacterID = NEW.CharacterID limit 1) or NEW.Edge < 0) or
 (NEW.Magic > ((select TotalEssence from ViewEssenceCost where CharacterID = NEW.CharacterID limit 1) + (select InitiationGrade from CharacterInitiation where CharacterID = NEW.CharacterID limit 1)) or NEW.Magic < 0) or
 (NEW.Resonance > ((select TotalEssence from ViewEssenceCost where CharacterID = NEW.CharacterID limit 1) + (select SubmersionGrade from CharacterSubmersion where CharacterID = NEW.CharacterID limit 1)) or NEW.Resonance < 0) 

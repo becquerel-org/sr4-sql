@@ -177,6 +177,7 @@ Name text not null primary key,
 BPCost integer not null, -- for negative qualities, the BP cost will be negative;
 MinRating integer default 1,
 MaxRating integer default 1,
+MaxTimesTaken integer,
 -- KarmaCost = 2 * BP cost
 Description text,
 constraint chk_minmax check(MinRating <= MaxRating),
@@ -193,7 +194,7 @@ foreign key (CharacterID) references Characters(CharacterID),
 foreign key (Quality) references Qualities(Name)
 );
 
-create trigger chk_rating_insert after insert on CharacterQualities
+create trigger chk_insert after insert on CharacterQualities
 	when (NEW.Rating not between (select MinRating from Qualities where Name = NEW.Quality) and (select MaxRating from Qualities where Name = NEW.Quality))
 begin 
   select raise(abort, 'Rating boundaries exceeded!');
