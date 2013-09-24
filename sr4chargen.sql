@@ -212,6 +212,19 @@ begin
   select raise(abort, 'Rating boundaries exceeded!');
 end;
 
+-- Aptitude handling
+create view CharacterAptitude as select CharacterID, Description as Skill from CharacterQualities where Quality = 'Aptitude';
+
+create trigger chk_max_rating after insert on CharacterSkills
+when
+   (((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 6) > 1)
+    or ((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 5) > 2)
+    or ((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 6) > 0 and (select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 5) > 0)
+    or ((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 7 and Skill not in (select Skill from CharacterAptitude where CharacterID = NEW.CharacterID)) > 0)
+    or ((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating > 7) > 0))
+begin
+  select raise(abort, 'Skill limit exceeded!');
+end;
 
 create table QualityReferences
 (
