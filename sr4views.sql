@@ -56,7 +56,7 @@ group by Characters.CharacterID;
 	
 create view ViewQualityCost as select
     CharacterID,
-	sum(Qualities.BPCost) as BP
+	sum(Qualities.BPCost * CharacterQualities.Rating) as BP
 from CharacterQualities
 	inner join Qualities on CharacterQualities.Quality = Qualities.Name
 group by CharacterID;

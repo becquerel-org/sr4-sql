@@ -300,7 +300,14 @@ VALUES
   ('Deep Cover (5 BP)', 5, 'Character''s actual identity is buried by manipulation and training, a trigger lets their real personality come forward until a second trigger brings it back to sleep.'),
   ('Deep Cover (10 BP)', 10, 'As in the 5 BP quality but the character knows what both triggers are and can set things up to bring herself in and out of deep cover on their schedule')  
 ;
-    
+   
+
+update Qualities set MaxRating=2 where Name = 'Focused Concentration';
+update Qualities set MaxRating=3 where Name = 'High Pain Tolerance';
+update Qualities set MaxRating=4 where Name = 'Magic Resistance';
+update Qualities set MaxRating=3 where Name = 'Will to Live';
+
+ 
 -- CREATE TABLE Spells
 -- (
 -- Name TEXT NOT NULL PRIMARY KEY,

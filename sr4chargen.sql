@@ -1,4 +1,4 @@
-    create table Books
+create table Books
 (Title text not null primary key);
 
 create table Messages
@@ -21,8 +21,12 @@ CurrentKarma integer,
 StreetCred integer,
 Notoriety integer,
 NativeLanguage text,
-CreationComplete boolean
+CreationComplete boolean,
+Hash text
 );
+
+create view CharacterURLs as select CharacterID, 'http://sr4.ef.gy/characters/' || Hash as URL from Characters;
+
 
 create table Metatypes
 (
@@ -169,20 +173,37 @@ foreign key(Title) references Books(Title)
 create table Qualities
 (
 Name text not null primary key,
+-- for qualities with a rating, this is the BP cost per rating point
 BPCost integer not null, -- for negative qualities, the BP cost will be negative;
+MinRating integer default 1,
+MaxRating integer default 1,
 -- KarmaCost = 2 * BP cost
-Description text
+Description text,
+constraint chk_minmax check(MinRating <= MaxRating),
+constraint chk_min check(MinRating >= 1)
 );
 
 create table CharacterQualities
 (
 CharacterID integer not null,
 Quality text not null,
+Rating integer default 1,
 Description text,
 foreign key (CharacterID) references Characters(CharacterID),
 foreign key (Quality) references Qualities(Name)
 );
 
+create trigger chk_rating_insert after insert on CharacterQualities
+	when (NEW.Rating not between (select MinRating from Qualities where Name = NEW.Quality) and (select MaxRating from Qualities where Name = NEW.Quality))
+begin 
+  select raise(abort, 'Rating boundaries exceeded!');
+end;
+
+create trigger chk_rating_update update of Rating on CharacterQualities
+	when  (NEW.Rating not between (select MinRating from Qualities where Name = NEW.Quality) and (select MaxRating from Qualities where Name = NEW.Quality))
+begin 
+  select raise(abort, 'Rating boundaries exceeded!');
+end;
 
 
 create table QualityReferences

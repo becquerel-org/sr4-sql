@@ -81,6 +81,13 @@ values
 (3, 'Technomancer', null)
 ;
 
+insert into CharacterQualities
+(CharacterID,
+Quality,
+Rating)
+values
+(2, 'Magic Resistance', 2);
+
 update CharacterAttributes set Magic = 5 where CharacterID = 1;
 update Characters set CreationComplete = 1 where CharacterID = 2;
 update CharacterAttributes set Resonance = 4 where CharacterID = 3;
