@@ -307,6 +307,13 @@ update Qualities set MaxRating=3 where Name = 'High Pain Tolerance';
 update Qualities set MaxRating=4 where Name = 'Magic Resistance';
 update Qualities set MaxRating=3 where Name = 'Will to Live';
 
+update Qualities set OnlyOnce=1 where Name = 'Aptitude';
+update Qualities set OnlyOnce=1 where Name = 'Codeslinger';
+update Qualities set OnlyOnce=1 where Name = 'Exceptional Attribute';
+update Qualities set OnlyOnce=1 where Name = 'Lucky';
+update Qualities set OnlyOnce=1 where Name = 'Mentor Spirit';
+
+
  
 -- CREATE TABLE Spells
 -- (

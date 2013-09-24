@@ -177,7 +177,7 @@ Name text not null primary key,
 BPCost integer not null, -- for negative qualities, the BP cost will be negative;
 MinRating integer default 1,
 MaxRating integer default 1,
-MaxTimesTaken integer,
+OnlyOnce boolean default 0, -- 1 if quality
 -- KarmaCost = 2 * BP cost
 Description text,
 constraint chk_minmax check(MinRating <= MaxRating),
@@ -198,6 +198,12 @@ create trigger chk_insert after insert on CharacterQualities
 	when (NEW.Rating not between (select MinRating from Qualities where Name = NEW.Quality) and (select MaxRating from Qualities where Name = NEW.Quality))
 begin 
   select raise(abort, 'Rating boundaries exceeded!');
+end;
+
+create trigger chk_count_insert after insert on CharacterQualities
+       when exists(select Count from (select count(*) as Count from CharacterQualities inner join Qualities on CharacterQualities.Quality = Qualities.Name where Qualities.OnlyOnce = 1 and CharacterID = NEW.CharacterID group by Quality) where Count > 1)
+begin
+  select raise(abort, 'Quality with OnlyOnce flag taken more than once');
 end;
 
 create trigger chk_rating_update update of Rating on CharacterQualities
