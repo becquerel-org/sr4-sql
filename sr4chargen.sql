@@ -782,7 +782,9 @@ end;
 create table CharacterBondedFoci
 (
   CharacterID integer not null,
-  Force integer not null 
+  Type text not null,
+  Force integer not null,
+  Notes integer not null 
 );
 
 create trigger foci_count before insert on CharacterBondedFoci
