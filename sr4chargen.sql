@@ -136,9 +136,11 @@ Skill text not null,
 Rating  integer not null,
 Specialisation text,
 constraint pk_cskills primary key (CharacterID, Skill),
+constraint chk_skills check(Rating >= 0),
 foreign key(CharacterID) references Characters(CharacterID),
 foreign key(Skill) references Skills(Name)
 );
+
 
 -- if a character has a skill group you insert it here, NOT in the Skills table
 create table CharacterSkillGroups
@@ -151,15 +153,15 @@ foreign key(CharacterID) references Characters(CharacterID),
 foreign key(SkillGroup) references SkillGroups(Name)
 );
 
+
 -- this view is what you want to use for display, it displays grouped skills correctly
-create view ViewCharacterSkills as select
+create view ViewCharacterGroupedSkills as select
 CharacterID, Name as Skill, Rating 
  from CharacterSkillGroups
       inner join Skills on Skills.SkillGroup = CharacterSkillGroups.SkillGroup 
  union
  select CharacterID, Skill, Rating from CharacterSkills;
       
-
 
 create table SkillReferences
 (
@@ -217,14 +219,49 @@ create view CharacterAptitude as select CharacterID, Description as Skill from C
 
 create trigger chk_max_rating after insert on CharacterSkills
 when
-   (((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 6) > 1)
-    or ((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 5) > 2)
-    or ((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 6) > 0 and (select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 5) > 0)
-    or ((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 7 and Skill not in (select Skill from CharacterAptitude where CharacterID = NEW.CharacterID)) > 0)
-    or ((select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating > 7) > 0))
+   (((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 6) > 1)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 5) > 2)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 6) > 0 and (select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 5) > 0)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 7 and Skill not in (select Skill from CharacterAptitude where CharacterID = NEW.CharacterID)) > 0)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating > 7) > 0))
 begin
   select raise(abort, 'Skill limit exceeded!');
 end;
+
+create trigger chk_max_rating_u after update on CharacterSkills
+when
+   (((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 6) > 1)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 5) > 2)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 6) > 0 and (select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 5) > 0)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 7 and Skill not in (select Skill from CharacterAptitude where CharacterID = NEW.CharacterID)) > 0)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating > 7) > 0))
+begin
+  select raise(abort, 'Skill limit exceeded!');
+end;
+
+create trigger chk_max_rating_sg after insert on CharacterSkillGroups
+when
+   (((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 6) > 1)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 5) > 2)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 6) > 0 and (select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 5) > 0)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 7 and Skill not in (select Skill from CharacterAptitude where CharacterID = NEW.CharacterID)) > 0)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating > 7) > 0))
+begin
+  select raise(abort, 'Skill limit exceeded!');
+end;
+
+create trigger chk_max_rating_sg_u after update on CharacterSkillGroups
+when
+   (((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 6) > 1)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 5) > 2)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 6) > 0 and (select count(*) from CharacterSkills where CharacterID = NEW.CharacterID and Rating = 5) > 0)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating = 7 and Skill not in (select Skill from CharacterAptitude where CharacterID = NEW.CharacterID)) > 0)
+    or ((select count(*) from ViewCharacterGroupedSkills where CharacterID = NEW.CharacterID and Rating > 7) > 0))
+begin
+  select raise(abort, 'Skill limit exceeded!');
+end;
+
+
 
 create table QualityReferences
 (
@@ -730,7 +767,7 @@ constraint pk_sprites primary key (CharacterID, SpriteID)
 
 create view CharacterSpriteCount as select CharacterID, Charisma as MaxSpriteCount from CharacterAttributes;
 
-create view CharacterSpriteTasks as select CharacterID, Rating as MaxSpriteTasks from ViewCharacterSkills where ViewCharacterSkills.Skill = 'Compiling';
+create view CharacterSpriteTasks as select CharacterID, Rating as MaxSpriteTasks from ViewCharacterGroupedSkills where ViewCharacterGroupedSkills.Skill = 'Compiling';
 
 
 create trigger chk_spritecount before insert on CharacterSprites
@@ -750,7 +787,7 @@ begin
 end;
 
 create view CharacterSpiritCount as select CharacterID, Charisma as MaxSpiritCount from CharacterAttributes;
-create view CharacterSpiritServices as select CharacterID, Rating as MaxSpiritServices from ViewCharacterSkills where ViewCharacterSkills.Skill = 'Summoning';
+create view CharacterSpiritServices as select CharacterID, Rating as MaxSpiritServices from ViewCharacterGroupedSkills where ViewCharacterGroupedSkills.Skill = 'Summoning';
 
 create table CharacterSpirits
 (
@@ -782,9 +819,7 @@ end;
 create table CharacterBondedFoci
 (
   CharacterID integer not null,
-  Type text not null,
-  Force integer not null,
-  Notes integer not null 
+  Force integer not null 
 );
 
 create trigger foci_count before insert on CharacterBondedFoci
