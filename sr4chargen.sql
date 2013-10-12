@@ -93,8 +93,8 @@ Logic integer not null,
 Charisma integer not null,
 Willpower integer not null,
 Edge integer not null,
-Magic integer, -- needs constraint, can be NULL
-Resonance integer, -- needs constraint, can be NULL
+Magic integer, 
+Resonance integer, 
 Message text,
 foreign key(CharacterID) references Characters(CharacterID),
 foreign key(Message) references Messages(Message)
