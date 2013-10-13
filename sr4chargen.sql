@@ -819,6 +819,7 @@ end;
 create table CharacterBondedFoci
 (
   CharacterID integer not null,
+  Type text not null,
   Force integer not null 
 );
 
