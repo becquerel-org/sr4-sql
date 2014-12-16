@@ -37,7 +37,7 @@ def query_db(query, args=(), one=False):
 
 @app.route('/')
 def show_entries():
-    render_template('show_entries.html', query_db('select name from characters'))
+    render_template('show_entries.html', query_db('select name, metatype, description from characters'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
