@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<ul class="characters">
+    {% for character in characters %}
+    <li><h2>{% character.name %}</h2>
+    {{ character.metatype }}, {{ character.description }}
+    </li>
+    {% endfor %}
+
+{% endblock %}
